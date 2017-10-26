@@ -13,7 +13,7 @@ object MiniJavaC extends App {
         logger.error("Filename not provided")
 
     } else {
-        val flags: Array[String] = args.dropRight(1)
+        val flags: Seq[String] = args.dropRight(1).toList
 
         if(flags.isEmpty)
             logger.debug("No flags chosen")
@@ -21,5 +21,7 @@ object MiniJavaC extends App {
             logger.debug("Using flags: " + flags)
 
         val file = Source.fromFile(args.last)
+
+        file.toList.foreach(print)
     }
 }
