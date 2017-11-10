@@ -6,7 +6,8 @@ public class LitLong extends ValueToken<Long> {
 
     private final Long val;
 
-    public LitLong(long val) {
+    public LitLong(int line, int col, long val) {
+        super(line, col);
         this.val = val;
     }
 

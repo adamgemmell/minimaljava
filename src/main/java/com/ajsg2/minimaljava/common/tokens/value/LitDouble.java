@@ -6,7 +6,8 @@ public class LitDouble extends ValueToken<Double> {
 
     private final Double val;
 
-    public LitDouble(double val) {
+    public LitDouble(int line, int col, double val) {
+        super(line, col);
         this.val = val;
     }
 

@@ -6,7 +6,8 @@ public class LitInt extends ValueToken<Integer> {
 
     private final Integer val;
 
-    public LitInt(int val) {
+    public LitInt(int line, int col, int val) {
+        super(line, col);
         this.val = val;
     }
 

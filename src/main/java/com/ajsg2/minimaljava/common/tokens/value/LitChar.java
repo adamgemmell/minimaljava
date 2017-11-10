@@ -6,7 +6,8 @@ public class LitChar extends ValueToken<Character> {
 
     private final Character val;
 
-    public LitChar(char val) {
+    public LitChar(int line, int col, char val) {
+        super(line, col);
         this.val = val;
     }
 
