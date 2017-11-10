@@ -1,0 +1,17 @@
+package com.ajsg2.minimaljava.common.tokens.value;
+
+import com.ajsg2.minimaljava.common.tokens.ValueToken;
+
+public class LitBool extends ValueToken<Boolean> {
+
+    private final Boolean val;
+
+    public LitBool(boolean val) {
+        this.val = val;
+    }
+
+    @Override
+    public Boolean getValue() {
+        return val;
+    }
+}
