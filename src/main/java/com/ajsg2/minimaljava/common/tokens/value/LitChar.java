@@ -15,4 +15,9 @@ public class LitChar extends ValueToken<Character> {
     public Character getValue() {
         return val;
     }
+
+    @Override
+    public String toString(){
+        return val.toString();
+    }
 }

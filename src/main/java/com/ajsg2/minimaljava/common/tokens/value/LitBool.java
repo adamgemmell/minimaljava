@@ -15,4 +15,9 @@ public class LitBool extends ValueToken<Boolean> {
     public Boolean getValue() {
         return val;
     }
+
+    @Override
+    public String toString(){
+        return val.toString();
+    }
 }

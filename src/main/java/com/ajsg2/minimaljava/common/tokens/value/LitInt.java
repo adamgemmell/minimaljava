@@ -15,4 +15,9 @@ public class LitInt extends ValueToken<Integer> {
     public Integer getValue() {
         return val;
     }
+
+    @Override
+    public String toString(){
+        return val.toString();
+    }
 }

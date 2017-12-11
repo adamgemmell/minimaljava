@@ -15,4 +15,9 @@ public class LitLong extends ValueToken<Long> {
     public Long getValue() {
         return val;
     }
+
+    @Override
+    public String toString(){
+        return val.toString();
+    }
 }

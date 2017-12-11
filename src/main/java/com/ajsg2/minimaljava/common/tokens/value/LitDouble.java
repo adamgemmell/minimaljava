@@ -15,4 +15,9 @@ public class LitDouble extends ValueToken<Double> {
     public Double getValue() {
         return val;
     }
+
+    @Override
+    public String toString(){
+        return val.toString();
+    }
 }

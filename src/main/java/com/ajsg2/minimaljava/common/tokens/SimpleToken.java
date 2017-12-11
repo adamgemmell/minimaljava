@@ -18,4 +18,9 @@ public abstract class SimpleToken implements Token{
     public int getCol() {
         return col;
     }
+
+    @Override
+    public String toString(){
+        return this.getClass().toString();
+    }
 }
