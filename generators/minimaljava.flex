@@ -1,6 +1,6 @@
 /* Spec file built with the guidance of the example lexer at http://jflex.de/manual.html */
 
-package com.ajsg2.minimaljava.Lexer;
+package com.ajsg2.minimaljava.lex;
 
 import com.ajsg2.minimaljava.common.tokens.*;
 import com.ajsg2.minimaljava.common.tokens.simple.*;
@@ -40,6 +40,8 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 <YYINITIAL> "new"	{ return new KeywordNew(yyline, yycolumn);}
 <YYINITIAL> "return"	{ return new KeywordReturn(yyline, yycolumn);}
 <YYINITIAL> "void"	{ return new KeywordVoid(yyline, yycolumn);}
+<YYINITIAL> "class"	{ return new KeywordClass(yyline, yycolumn);}
+<YYINITIAL> "extends"	{ return new KeywordExtends(yyline, yycolumn);}
 
 // Literals
 
