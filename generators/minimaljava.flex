@@ -18,6 +18,7 @@ import com.ajsg2.minimaljava.common.tokens.value.*;
 %column
 %public
 %type Token
+%yylexthrow UnexpectedCharacterException
 
 // Custom code block
 %{
@@ -85,5 +86,12 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 
 // Ignore comments and whitespace
 	
-{Comment}		{ }
-{WhiteSpace}	{ }
+{Comment}			{ }
+{WhiteSpace}		{ }
+
+// Ignore idents/ints for now
+{Identifier}			{ }
+{DecIntegerLiteral}	{ }
+
+// Error
+[^]		{ throw new UnexpectedCharacterException(yytext(), yyline, yycolumn); }

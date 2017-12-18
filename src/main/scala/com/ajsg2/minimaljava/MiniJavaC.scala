@@ -2,8 +2,8 @@ package com.ajsg2.minimaljava
 
 import java.io.{BufferedReader, FileReader}
 
+import com.ajsg2.minimaljava.common.tokens.UnexpectedCharacterException
 import com.typesafe.scalalogging.Logger
-
 import com.ajsg2.minimaljava.lex.Lexer
 
 object MiniJavaC extends App {
@@ -26,11 +26,16 @@ object MiniJavaC extends App {
 
         val lexer = new Lexer(reader)
 
-        var token = lexer.yylex()
+        try{
+            var token = lexer.yylex()
 
-        while (token != null) {
-            print(token)
-            token = lexer.yylex()
+            while (token != null) {
+                println(token)
+                token = lexer.yylex()
+            }
+        }catch {
+            case e: UnexpectedCharacterException => System.err.println(e.getMessage)
+            case e: Exception => e.printStackTrace()
         }
     }
 }

@@ -1,7 +1,7 @@
-public class HelloWorld {
-
-    public static void main(String[] args) {
-        System.out.println("Hello, World");
-    }
-
+class TestClass {
+	int wow(int n) {
+		return n+2;
+	}
 }
+
+error #
