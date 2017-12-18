@@ -19,6 +19,7 @@ import com.ajsg2.minimaljava.common.tokens.value.*;
 %public
 %type Token
 %yylexthrow UnexpectedCharacterException
+%eofclose
 
 // Custom code block
 %{

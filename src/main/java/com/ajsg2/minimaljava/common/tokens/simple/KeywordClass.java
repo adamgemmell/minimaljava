@@ -4,7 +4,7 @@ import com.ajsg2.minimaljava.common.tokens.SimpleToken;
 
 public class KeywordClass extends SimpleToken {
 
-    public KeywordClass(int line, int col) {
-        super(line, col);
-    }
+	public KeywordClass(int line, int col) {
+		super(line, col);
+	}
 }

@@ -4,7 +4,7 @@ import com.ajsg2.minimaljava.common.tokens.SimpleToken;
 
 public class OpMinus extends SimpleToken {
 
-    public OpMinus(int line, int col) {
-        super(line, col);
-    }
+	public OpMinus(int line, int col) {
+		super(line, col);
+	}
 }

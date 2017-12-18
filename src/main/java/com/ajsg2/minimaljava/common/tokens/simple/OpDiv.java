@@ -4,7 +4,7 @@ import com.ajsg2.minimaljava.common.tokens.SimpleToken;
 
 public class OpDiv extends SimpleToken {
 
-    public OpDiv(int line, int col) {
-        super(line, col);
-    }
+	public OpDiv(int line, int col) {
+		super(line, col);
+	}
 }

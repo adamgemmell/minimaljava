@@ -4,7 +4,7 @@ import com.ajsg2.minimaljava.common.tokens.SimpleToken;
 
 public class BracketR extends SimpleToken {
 
-    public BracketR(int line, int col) {
-        super(line, col);
-    }
+	public BracketR(int line, int col) {
+		super(line, col);
+	}
 }

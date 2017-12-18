@@ -4,20 +4,20 @@ import com.ajsg2.minimaljava.common.tokens.ValueToken;
 
 public class LitDouble extends ValueToken<Double> {
 
-    private final Double val;
+	private final Double val;
 
-    public LitDouble(int line, int col, double val) {
-        super(line, col);
-        this.val = val;
-    }
+	public LitDouble(int line, int col, double val) {
+		super(line, col);
+		this.val = val;
+	}
 
-    @Override
-    public Double getValue() {
-        return val;
-    }
+	@Override
+	public Double getValue() {
+		return val;
+	}
 
-    @Override
-    public String toString(){
-        return val.toString();
-    }
+	@Override
+	public String toString() {
+		return val.toString();
+	}
 }

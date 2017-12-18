@@ -4,7 +4,7 @@ import com.ajsg2.minimaljava.common.tokens.SimpleToken;
 
 public class Semicolon extends SimpleToken {
 
-    public Semicolon(int line, int col) {
-        super(line, col);
-    }
+	public Semicolon(int line, int col) {
+		super(line, col);
+	}
 }
