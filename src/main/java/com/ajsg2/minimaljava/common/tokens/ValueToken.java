@@ -4,13 +4,13 @@ public abstract class ValueToken<T> implements Token {
 
 	private final int line;
 	private final int col;
+	T val;
 
-	protected ValueToken(int line, int col) {
+	protected ValueToken(int line, int col, T val) {
 		this.line = line;
 		this.col = col;
+		this.val = val;
 	}
-
-	public abstract T getValue();
 
 	@Override
 	public int getLine() {
@@ -20,5 +20,13 @@ public abstract class ValueToken<T> implements Token {
 	@Override
 	public int getCol() {
 		return col;
+	}
+
+	public T getValue() {
+		return val;
+	}
+
+	public String toString() {
+		return this.getClass().getSimpleName().toString() + ": " + val.toString();
 	}
 }
