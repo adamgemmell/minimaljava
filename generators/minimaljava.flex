@@ -18,7 +18,7 @@ import com.ajsg2.minimaljava.common.tokens.value.*;
 %column
 %public
 %type Token
-%yylexthrow UnexpectedCharacterException
+%yylexthrow UnexpectedCharacterException,NumberFormatException
 %eofclose
 
 // Custom code block
@@ -90,9 +90,16 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 {Comment}			{ }
 {WhiteSpace}		{ }
 
-// Ignore idents/ints for now
-{Identifier}			{ }
-{DecIntegerLiteral}	{ }
+// Values
+{Identifier}			{ return new Identifier(yyline, yycolumn, yytext()); }
+{DecIntegerLiteral}	{ 	
+					Integer num;
+					
+					// throws NumberFormatException
+					num = Integer.parseInt(yytext());
+
+					return new LitInt(yyline, yycolumn, num);
+				}
 
 // Error
 [^]		{ throw new UnexpectedCharacterException(yytext(), yyline, yycolumn); }

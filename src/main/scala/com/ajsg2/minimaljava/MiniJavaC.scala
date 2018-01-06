@@ -35,8 +35,9 @@ object MiniJavaC extends App {
 				token = lexer.yylex()
 			}
 		} catch {
-			case e: UnexpectedCharacterException => System.err.println(e.getMessage)
-			case e: Exception => e.printStackTrace()
+			case e: UnexpectedCharacterException => logger.error(e.getMessage)
+			case e: NumberFormatException => logger.error(e.getMessage)
+			case e: Exception => logger.error(e.getMessage)
 		}
 	}
 }

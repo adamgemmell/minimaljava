@@ -34,7 +34,9 @@ import com.ajsg2.minimaljava.common.tokens.simple.TypeChar;
 import com.ajsg2.minimaljava.common.tokens.simple.TypeDouble;
 import com.ajsg2.minimaljava.common.tokens.simple.TypeInt;
 import com.ajsg2.minimaljava.common.tokens.simple.TypeLong;
+import com.ajsg2.minimaljava.common.tokens.value.Identifier;
 import com.ajsg2.minimaljava.common.tokens.value.LitBool;
+import com.ajsg2.minimaljava.common.tokens.value.LitInt;
 
 /**
  * The Minimal Java Lexer
@@ -46,14 +48,17 @@ public class Lexer {
 	 * This character denotes the end of file
 	 */
 	public static final int YYEOF = -1;
-	/**
-	 * lexical states
-	 */
-	public static final int YYINITIAL = 0;
+
 	/**
 	 * initial size of the lookahead buffer
 	 */
 	private static final int ZZ_BUFFERSIZE = 16384;
+
+	/**
+	 * lexical states
+	 */
+	public static final int YYINITIAL = 0;
+
 	/**
 	 * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l ZZ_LEXSTATE[l+1] is the state
 	 * in the DFA for the lexical state l at the beginning of a line l is of the form l = 2*k, k a
@@ -234,160 +239,22 @@ public class Lexer {
 	 * Translates characters to character classes
 	 */
 	private static final char[] ZZ_CMAP = zzUnpackCMap(ZZ_CMAP_PACKED);
-	private static final String ZZ_ACTION_PACKED_0 =
-			"\1\0\1\1\2\2\1\3\15\2\1\4\1\1\1\5" +
-					"\1\6\1\7\1\10\1\11\1\1\1\12\1\13\1\14" +
-					"\1\15\1\16\1\17\1\20\15\2\1\21\1\22\1\23" +
-					"\1\24\1\25\4\2\1\26\10\2\1\27\1\30\2\2" +
-					"\1\31\1\32\5\2\1\33\1\34\2\2\1\35\1\36" +
-					"\1\2\1\37\1\40";
+
 	/**
 	 * Translates DFA states to action switch labels.
 	 */
 	private static final int[] ZZ_ACTION = zzUnpackAction();
-	private static final String ZZ_ROWMAP_PACKED_0 =
-			"\0\0\0\53\0\126\0\53\0\201\0\254\0\327\0\u0102" +
-					"\0\u012d\0\u0158\0\u0183\0\u01ae\0\u01d9\0\u0204\0\u022f\0\u025a" +
-					"\0\u0285\0\u02b0\0\u02db\0\u0306\0\u0331\0\53\0\53\0\53" +
-					"\0\53\0\u035c\0\53\0\53\0\53\0\53\0\53\0\53" +
-					"\0\53\0\u0387\0\u03b2\0\u03dd\0\u0408\0\u0433\0\u045e\0\u0489" +
-					"\0\u04b4\0\u04df\0\u050a\0\u0535\0\u0560\0\u058b\0\53\0\53" +
-					"\0\53\0\53\0\254\0\u05b6\0\u05e1\0\u060c\0\u0637\0\254" +
-					"\0\u0662\0\u068d\0\u06b8\0\u06e3\0\u070e\0\u0739\0\u0764\0\u078f" +
-					"\0\254\0\254\0\u07ba\0\u07e5\0\254\0\254\0\u0810\0\u083b" +
-					"\0\u0866\0\u0891\0\u08bc\0\254\0\254\0\u08e7\0\u0912\0\254" +
-					"\0\254\0\u093d\0\254\0\254";
-	/**
-	 * Translates a state to a row index in the transition table
-	 */
-	private static final int[] ZZ_ROWMAP = zzUnpackRowMap();
-	private static final String ZZ_TRANS_PACKED_0 =
-			"\1\2\1\3\2\4\1\5\1\6\1\2\1\4\1\7" +
-					"\1\10\1\11\1\6\1\12\1\13\1\6\1\14\1\6" +
-					"\1\15\1\16\1\17\1\20\3\6\1\21\1\22\2\6" +
-					"\1\23\1\24\1\25\1\26\1\27\1\30\1\31\1\32" +
-					"\1\33\1\34\1\35\1\36\1\37\1\40\1\41\55\0" +
-					"\1\4\54\0\1\42\53\0\27\6\26\0\2\7\47\0" +
-					"\5\6\1\43\21\6\24\0\22\6\1\44\4\6\24\0" +
-					"\5\6\1\45\21\6\24\0\7\6\1\46\17\6\24\0" +
-					"\13\6\1\47\13\6\24\0\4\6\1\50\22\6\24\0" +
-					"\13\6\1\51\13\6\24\0\17\6\1\52\5\6\1\53" +
-					"\1\6\24\0\13\6\1\54\13\6\24\0\20\6\1\55" +
-					"\6\6\24\0\13\6\1\56\13\6\53\0\1\57\53\0" +
-					"\1\60\51\0\1\61\61\0\1\62\7\0\1\42\1\3" +
-					"\1\4\50\42\5\0\6\6\1\63\20\6\24\0\10\6" +
-					"\1\64\16\6\24\0\10\6\1\65\16\6\24\0\11\6" +
-					"\1\66\15\6\24\0\14\6\1\67\12\6\24\0\10\6" +
-					"\1\70\16\6\24\0\11\6\1\71\15\6\24\0\20\6" +
-					"\1\72\6\6\24\0\20\6\1\73\6\6\24\0\4\6" +
-					"\1\74\22\6\24\0\17\6\1\75\7\6\24\0\13\6" +
-					"\1\76\13\6\24\0\5\6\1\77\21\6\24\0\11\6" +
-					"\1\100\15\6\24\0\5\6\1\101\21\6\24\0\15\6" +
-					"\1\102\11\6\24\0\24\6\1\103\2\6\24\0\21\6" +
-					"\1\104\5\6\24\0\7\6\1\105\17\6\24\0\26\6" +
-					"\1\106\24\0\21\6\1\107\5\6\24\0\17\6\1\110" +
-					"\7\6\24\0\4\6\1\111\22\6\24\0\7\6\1\112" +
-					"\17\6\24\0\17\6\1\113\7\6\24\0\21\6\1\114" +
-					"\5\6\24\0\5\6\1\115\21\6\24\0\5\6\1\116" +
-					"\21\6\24\0\15\6\1\117\11\6\24\0\4\6\1\120" +
-					"\22\6\24\0\5\6\1\121\21\6\24\0\20\6\1\122" +
-					"\6\6\24\0\21\6\1\123\5\6\24\0\4\6\1\124" +
-					"\22\6\17\0";
-	/**
-	 * The transition table of the DFA
-	 */
-	private static final int[] ZZ_TRANS = zzUnpackTrans();
-	/* error codes */
-	private static final int ZZ_UNKNOWN_ERROR = 0;
-	private static final int ZZ_NO_MATCH = 1;
-	private static final int ZZ_PUSHBACK_2BIG = 2;
-	/* error messages for the codes above */
-	private static final String ZZ_ERROR_MSG[] = {
-			"Unknown internal scanner error",
-			"Error: could not match input",
-			"Error: pushback value was too large"
-	};
-	private static final String ZZ_ATTRIBUTE_PACKED_0 =
-			"\1\0\1\11\1\1\1\11\21\1\4\11\1\1\7\11" +
-					"\15\1\4\11\42\1";
-	/**
-	 * ZZ_ATTRIBUTE[aState] contains the attributes of state <code>aState</code>
-	 */
-	private static final int[] ZZ_ATTRIBUTE = zzUnpackAttribute();
-	/**
-	 * the input device
-	 */
-	private java.io.Reader zzReader;
-	/**
-	 * the current state of the DFA
-	 */
-	private int zzState;
-	/**
-	 * the current lexical state
-	 */
-	private int zzLexicalState = YYINITIAL;
-	/**
-	 * this buffer contains the current text to be matched and is the source of the yytext() string
-	 */
-	private char zzBuffer[] = new char[ZZ_BUFFERSIZE];
-	/**
-	 * the textposition at the last accepting state
-	 */
-	private int zzMarkedPos;
-	/**
-	 * the current text position in the buffer
-	 */
-	private int zzCurrentPos;
-	/**
-	 * startRead marks the beginning of the yytext() string in the buffer
-	 */
-	private int zzStartRead;
-	/**
-	 * endRead marks the last character in the buffer, that has been read from input
-	 */
-	private int zzEndRead;
-	/**
-	 * number of newlines encountered up to the start of the matched text
-	 */
-	private int yyline;
-	/**
-	 * the number of characters up to the start of the matched text
-	 */
-	private int yychar;
-	/**
-	 * the number of characters from the last newline up to the start of the matched text
-	 */
-	private int yycolumn;
-	/**
-	 * zzAtBOL == true <=> the scanner is currently at the beginning of a line
-	 */
-	private boolean zzAtBOL = true;
-	/**
-	 * zzAtEOF == true <=> the scanner is at the EOF
-	 */
-	private boolean zzAtEOF;
-	/**
-	 * denotes if the user-EOF-code has already been executed
-	 */
-	private boolean zzEOFDone;
-	/**
-	 * The number of occupied positions in zzBuffer beyond zzEndRead. When a lead/high surrogate has
-	 * been read from the input stream into the final zzBuffer position, this will have a value of
-	 * 1; otherwise, it will have a value of 0.
-	 */
-	private int zzFinalHighSurrogate = 0;
 
-	/**
-	 * Creates a new scanner
-	 *
-	 * @param in the java.io.Reader to read input from.
-	 */
-	public Lexer(java.io.Reader in) {
-		this.zzReader = in;
-	}
+	private static final String ZZ_ACTION_PACKED_0 =
+			"\1\0\1\1\2\2\1\3\1\4\2\5\13\4\1\6" +
+					"\1\1\1\7\1\10\1\11\1\12\1\13\1\1\1\14" +
+					"\1\15\1\16\1\17\1\20\1\21\1\22\1\2\14\4" +
+					"\1\23\1\24\1\25\1\26\1\27\4\4\1\30\10\4" +
+					"\1\31\1\32\2\4\1\33\1\34\5\4\1\35\1\36" +
+					"\2\4\1\37\1\40\1\4\1\41\1\42";
 
 	private static int[] zzUnpackAction() {
-		int[] result = new int[84];
+		int[] result = new int[85];
 		int offset = 0;
 		offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
 		return result;
@@ -407,8 +274,27 @@ public class Lexer {
 		return j;
 	}
 
+
+	/**
+	 * Translates a state to a row index in the transition table
+	 */
+	private static final int[] ZZ_ROWMAP = zzUnpackRowMap();
+
+	private static final String ZZ_ROWMAP_PACKED_0 =
+			"\0\0\0\53\0\126\0\53\0\201\0\254\0\53\0\327" +
+					"\0\u0102\0\u012d\0\u0158\0\u0183\0\u01ae\0\u01d9\0\u0204\0\u022f" +
+					"\0\u025a\0\u0285\0\u02b0\0\u02db\0\u0306\0\u0331\0\53\0\53" +
+					"\0\53\0\53\0\u035c\0\53\0\53\0\53\0\53\0\53" +
+					"\0\53\0\53\0\u0387\0\u03b2\0\u03dd\0\u0408\0\u0433\0\u045e" +
+					"\0\u0489\0\u04b4\0\u04df\0\u050a\0\u0535\0\u0560\0\u058b\0\53" +
+					"\0\53\0\53\0\53\0\254\0\u05b6\0\u05e1\0\u060c\0\u0637" +
+					"\0\254\0\u0662\0\u068d\0\u06b8\0\u06e3\0\u070e\0\u0739\0\u0764" +
+					"\0\u078f\0\254\0\254\0\u07ba\0\u07e5\0\254\0\254\0\u0810" +
+					"\0\u083b\0\u0866\0\u0891\0\u08bc\0\254\0\254\0\u08e7\0\u0912" +
+					"\0\254\0\254\0\u093d\0\254\0\254";
+
 	private static int[] zzUnpackRowMap() {
-		int[] result = new int[84];
+		int[] result = new int[85];
 		int offset = 0;
 		offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
 		return result;
@@ -424,6 +310,44 @@ public class Lexer {
 		}
 		return j;
 	}
+
+	/**
+	 * The transition table of the DFA
+	 */
+	private static final int[] ZZ_TRANS = zzUnpackTrans();
+
+	private static final String ZZ_TRANS_PACKED_0 =
+			"\1\2\1\3\2\4\1\5\1\6\1\2\1\7\1\10" +
+					"\1\11\1\12\1\6\1\13\1\14\1\6\1\15\1\6" +
+					"\1\16\1\17\1\20\1\21\3\6\1\22\1\23\2\6" +
+					"\1\24\1\25\1\26\1\27\1\30\1\31\1\32\1\33" +
+					"\1\34\1\35\1\36\1\37\1\40\1\41\1\42\55\0" +
+					"\1\4\54\0\1\43\53\0\27\6\26\0\2\10\47\0" +
+					"\5\6\1\44\21\6\24\0\22\6\1\45\4\6\24\0" +
+					"\5\6\1\46\21\6\24\0\7\6\1\47\17\6\24\0" +
+					"\13\6\1\50\13\6\24\0\4\6\1\51\22\6\24\0" +
+					"\13\6\1\52\13\6\24\0\17\6\1\53\5\6\1\54" +
+					"\1\6\24\0\13\6\1\55\13\6\24\0\20\6\1\56" +
+					"\6\6\24\0\13\6\1\57\13\6\53\0\1\60\53\0" +
+					"\1\61\51\0\1\62\61\0\1\63\7\0\1\43\1\3" +
+					"\1\4\50\43\5\0\6\6\1\64\20\6\24\0\10\6" +
+					"\1\65\16\6\24\0\10\6\1\66\16\6\24\0\11\6" +
+					"\1\67\15\6\24\0\14\6\1\70\12\6\24\0\10\6" +
+					"\1\71\16\6\24\0\11\6\1\72\15\6\24\0\20\6" +
+					"\1\73\6\6\24\0\20\6\1\74\6\6\24\0\4\6" +
+					"\1\75\22\6\24\0\17\6\1\76\7\6\24\0\13\6" +
+					"\1\77\13\6\24\0\5\6\1\100\21\6\24\0\11\6" +
+					"\1\101\15\6\24\0\5\6\1\102\21\6\24\0\15\6" +
+					"\1\103\11\6\24\0\24\6\1\104\2\6\24\0\21\6" +
+					"\1\105\5\6\24\0\7\6\1\106\17\6\24\0\26\6" +
+					"\1\107\24\0\21\6\1\110\5\6\24\0\17\6\1\111" +
+					"\7\6\24\0\4\6\1\112\22\6\24\0\7\6\1\113" +
+					"\17\6\24\0\17\6\1\114\7\6\24\0\21\6\1\115" +
+					"\5\6\24\0\5\6\1\116\21\6\24\0\5\6\1\117" +
+					"\21\6\24\0\15\6\1\120\11\6\24\0\4\6\1\121" +
+					"\22\6\24\0\5\6\1\122\21\6\24\0\20\6\1\123" +
+					"\6\6\24\0\21\6\1\124\5\6\24\0\4\6\1\125" +
+					"\22\6\17\0";
 
 	private static int[] zzUnpackTrans() {
 		int[] result = new int[2408];
@@ -447,15 +371,34 @@ public class Lexer {
 		return j;
 	}
 
+
+	/* error codes */
+	private static final int ZZ_UNKNOWN_ERROR = 0;
+	private static final int ZZ_NO_MATCH = 1;
+	private static final int ZZ_PUSHBACK_2BIG = 2;
+
+	/* error messages for the codes above */
+	private static final String ZZ_ERROR_MSG[] = {
+			"Unknown internal scanner error",
+			"Error: could not match input",
+			"Error: pushback value was too large"
+	};
+
+	/**
+	 * ZZ_ATTRIBUTE[aState] contains the attributes of state <code>aState</code>
+	 */
+	private static final int[] ZZ_ATTRIBUTE = zzUnpackAttribute();
+
+	private static final String ZZ_ATTRIBUTE_PACKED_0 =
+			"\1\0\1\11\1\1\1\11\2\1\1\11\17\1\4\11" +
+					"\1\1\7\11\15\1\4\11\42\1";
+
 	private static int[] zzUnpackAttribute() {
-		int[] result = new int[84];
+		int[] result = new int[85];
 		int offset = 0;
 		offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
 		return result;
 	}
-
-	/* user code: */
-	//empty
 
 	private static int zzUnpackAttribute(String packed, int offset, int[] result) {
 		int i = 0;       /* index in packed string  */
@@ -470,6 +413,97 @@ public class Lexer {
 		}
 		return j;
 	}
+
+	/**
+	 * the input device
+	 */
+	private java.io.Reader zzReader;
+
+	/**
+	 * the current state of the DFA
+	 */
+	private int zzState;
+
+	/**
+	 * the current lexical state
+	 */
+	private int zzLexicalState = YYINITIAL;
+
+	/**
+	 * this buffer contains the current text to be matched and is the source of the yytext() string
+	 */
+	private char zzBuffer[] = new char[ZZ_BUFFERSIZE];
+
+	/**
+	 * the textposition at the last accepting state
+	 */
+	private int zzMarkedPos;
+
+	/**
+	 * the current text position in the buffer
+	 */
+	private int zzCurrentPos;
+
+	/**
+	 * startRead marks the beginning of the yytext() string in the buffer
+	 */
+	private int zzStartRead;
+
+	/**
+	 * endRead marks the last character in the buffer, that has been read from input
+	 */
+	private int zzEndRead;
+
+	/**
+	 * number of newlines encountered up to the start of the matched text
+	 */
+	private int yyline;
+
+	/**
+	 * the number of characters up to the start of the matched text
+	 */
+	private int yychar;
+
+	/**
+	 * the number of characters from the last newline up to the start of the matched text
+	 */
+	private int yycolumn;
+
+	/**
+	 * zzAtBOL == true <=> the scanner is currently at the beginning of a line
+	 */
+	private boolean zzAtBOL = true;
+
+	/**
+	 * zzAtEOF == true <=> the scanner is at the EOF
+	 */
+	private boolean zzAtEOF;
+
+	/**
+	 * denotes if the user-EOF-code has already been executed
+	 */
+	private boolean zzEOFDone;
+
+	/**
+	 * The number of occupied positions in zzBuffer beyond zzEndRead. When a lead/high surrogate has
+	 * been read from the input stream into the final zzBuffer position, this will have a value of
+	 * 1; otherwise, it will have a value of 0.
+	 */
+	private int zzFinalHighSurrogate = 0;
+
+	/* user code: */
+	//empty
+
+
+	/**
+	 * Creates a new scanner
+	 *
+	 * @param in the java.io.Reader to read input from.
+	 */
+	public Lexer(java.io.Reader in) {
+		this.zzReader = in;
+	}
+
 
 	/**
 	 * Unpacks the compressed character translation table.
@@ -699,7 +733,8 @@ public class Lexer {
 	 * @return the next token
 	 * @throws java.io.IOException if any I/O-Error occurs
 	 */
-	public Token yylex() throws java.io.IOException, UnexpectedCharacterException {
+	public Token yylex()
+			throws java.io.IOException, UnexpectedCharacterException, NumberFormatException {
 		int zzInput;
 		int zzAction;
 
@@ -846,161 +881,176 @@ public class Lexer {
 					case 1: {
 						throw new UnexpectedCharacterException(yytext(), yyline, yycolumn);
 					}
-					case 33:
+					case 35:
 						break;
 					case 2: {
 					}
-					case 34:
+					case 36:
 						break;
 					case 3: {
 						return new OpDiv(yyline, yycolumn);
 					}
-					case 35:
-						break;
-					case 4: {
-						return new Assignment(yyline, yycolumn);
-					}
-					case 36:
-						break;
-					case 5: {
-						return new OpGT(yyline, yycolumn);
-					}
 					case 37:
 						break;
-					case 6: {
-						return new OpMinus(yyline, yycolumn);
+					case 4: {
+						return new Identifier(yyline, yycolumn, yytext());
 					}
 					case 38:
 						break;
-					case 7: {
-						return new OpMod(yyline, yycolumn);
+					case 5: {
+						Integer num;
+
+						// throws NumberFormatException
+						num = Integer.parseInt(yytext());
+
+						return new LitInt(yyline, yycolumn, num);
 					}
 					case 39:
 						break;
-					case 8: {
-						return new OpMult(yyline, yycolumn);
+					case 6: {
+						return new Assignment(yyline, yycolumn);
 					}
 					case 40:
 						break;
-					case 9: {
-						return new OpNot(yyline, yycolumn);
+					case 7: {
+						return new OpGT(yyline, yycolumn);
 					}
 					case 41:
 						break;
-					case 10: {
-						return new OpPlus(yyline, yycolumn);
+					case 8: {
+						return new OpMinus(yyline, yycolumn);
 					}
 					case 42:
 						break;
-					case 11: {
-						return new BracketL(yyline, yycolumn);
+					case 9: {
+						return new OpMod(yyline, yycolumn);
 					}
 					case 43:
 						break;
-					case 12: {
-						return new BracketR(yyline, yycolumn);
+					case 10: {
+						return new OpMult(yyline, yycolumn);
 					}
 					case 44:
 						break;
-					case 13: {
-						return new CurlyBraceL(yyline, yycolumn);
+					case 11: {
+						return new OpNot(yyline, yycolumn);
 					}
 					case 45:
 						break;
-					case 14: {
-						return new CurlyBraceR(yyline, yycolumn);
+					case 12: {
+						return new OpPlus(yyline, yycolumn);
 					}
 					case 46:
 						break;
-					case 15: {
-						return new Period(yyline, yycolumn);
+					case 13: {
+						return new BracketL(yyline, yycolumn);
 					}
 					case 47:
 						break;
-					case 16: {
-						return new Semicolon(yyline, yycolumn);
+					case 14: {
+						return new BracketR(yyline, yycolumn);
 					}
 					case 48:
 						break;
-					case 17: {
-						return new OpEq(yyline, yycolumn);
+					case 15: {
+						return new CurlyBraceL(yyline, yycolumn);
 					}
 					case 49:
 						break;
-					case 18: {
-						return new OpAnd(yyline, yycolumn);
+					case 16: {
+						return new CurlyBraceR(yyline, yycolumn);
 					}
 					case 50:
 						break;
-					case 19: {
-						return new OpGTE(yyline, yycolumn);
+					case 17: {
+						return new Period(yyline, yycolumn);
 					}
 					case 51:
 						break;
-					case 20: {
-						return new OpOr(yyline, yycolumn);
+					case 18: {
+						return new Semicolon(yyline, yycolumn);
 					}
 					case 52:
 						break;
-					case 21: {
-						return new KeywordNew(yyline, yycolumn);
+					case 19: {
+						return new OpEq(yyline, yycolumn);
 					}
 					case 53:
 						break;
-					case 22: {
-						return new TypeInt(yyline, yycolumn);
+					case 20: {
+						return new OpAnd(yyline, yycolumn);
 					}
 					case 54:
 						break;
-					case 23: {
-						return new LitBool(yyline, yycolumn, true);
+					case 21: {
+						return new OpGTE(yyline, yycolumn);
 					}
 					case 55:
 						break;
-					case 24: {
-						return new KeywordVoid(yyline, yycolumn);
+					case 22: {
+						return new OpOr(yyline, yycolumn);
 					}
 					case 56:
 						break;
-					case 25: {
-						return new TypeChar(yyline, yycolumn);
+					case 23: {
+						return new KeywordNew(yyline, yycolumn);
 					}
 					case 57:
 						break;
-					case 26: {
-						return new TypeLong(yyline, yycolumn);
+					case 24: {
+						return new TypeInt(yyline, yycolumn);
 					}
 					case 58:
 						break;
-					case 27: {
-						return new KeywordClass(yyline, yycolumn);
+					case 25: {
+						return new LitBool(yyline, yycolumn, true);
 					}
 					case 59:
 						break;
-					case 28: {
-						return new LitBool(yyline, yycolumn, false);
+					case 26: {
+						return new KeywordVoid(yyline, yycolumn);
 					}
 					case 60:
 						break;
-					case 29: {
-						return new KeywordReturn(yyline, yycolumn);
+					case 27: {
+						return new TypeChar(yyline, yycolumn);
 					}
 					case 61:
 						break;
-					case 30: {
-						return new TypeDouble(yyline, yycolumn);
+					case 28: {
+						return new TypeLong(yyline, yycolumn);
 					}
 					case 62:
 						break;
-					case 31: {
-						return new KeywordExtends(yyline, yycolumn);
+					case 29: {
+						return new KeywordClass(yyline, yycolumn);
 					}
 					case 63:
 						break;
-					case 32: {
-						return new TypeBoolean(yyline, yycolumn);
+					case 30: {
+						return new LitBool(yyline, yycolumn, false);
 					}
 					case 64:
+						break;
+					case 31: {
+						return new KeywordReturn(yyline, yycolumn);
+					}
+					case 65:
+						break;
+					case 32: {
+						return new TypeDouble(yyline, yycolumn);
+					}
+					case 66:
+						break;
+					case 33: {
+						return new KeywordExtends(yyline, yycolumn);
+					}
+					case 67:
+						break;
+					case 34: {
+						return new TypeBoolean(yyline, yycolumn);
+					}
+					case 68:
 						break;
 					default:
 						zzScanError(ZZ_NO_MATCH);
@@ -1008,6 +1058,4 @@ public class Lexer {
 			}
 		}
 	}
-
-
 }
