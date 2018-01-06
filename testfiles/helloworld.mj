@@ -1,7 +1,8 @@
 class TestClass {
 	int wow(int n) {
 		return n+2;
+		// Comment
 	}
 }
 
-error #
+error incoming #
