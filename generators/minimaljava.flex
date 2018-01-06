@@ -28,12 +28,14 @@ import com.ajsg2.minimaljava.common.tokens.value.*;
 
 LineTerminator	= \r|\n|\r\n
 InputCharacter	= [^\r\n]
-WhiteSpace		= {LineTerminator} | [ \t\f]
+WhiteSpace		= {LineTerminator}|[ \t\f]
 
-Comment = "//" {InputCharacter}* {LineTerminator}?
+Comment = "//" {InputCharacter}*{LineTerminator}?
 
-Identifier = [:jletter:] [:jletterdigit:]*
-DecIntegerLiteral = 0 | [1-9][0-9]*
+Identifier = [:jletter:][:jletterdigit:]*
+DecIntegerLiteral = 0|[1-9][0-9]*
+DecLongLiteral = 0[Ll]|[1-9][0-9]*[Ll]
+
 
 %%
 
@@ -44,11 +46,6 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 <YYINITIAL> "void"	{ return new KeywordVoid(yyline, yycolumn);}
 <YYINITIAL> "class"	{ return new KeywordClass(yyline, yycolumn);}
 <YYINITIAL> "extends"	{ return new KeywordExtends(yyline, yycolumn);}
-
-// Literals
-
-<YYINITIAL> "true"	{ return new LitBool(yyline, yycolumn, true);}
-<YYINITIAL> "false"	{ return new LitBool(yyline, yycolumn, false);}
 
 // Primitive types
 
@@ -90,9 +87,11 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 {Comment}			{ }
 {WhiteSpace}		{ }
 
-// Values
-{Identifier}			{ return new Identifier(yyline, yycolumn, yytext()); }
-{DecIntegerLiteral}	{ 	
+// Literals
+
+<YYINITIAL> "true"	{ return new LitBool(yyline, yycolumn, true);}
+<YYINITIAL> "false"	{ return new LitBool(yyline, yycolumn, false);}
+{DecIntegerLiteral}	{
 					Integer num;
 					
 					// throws NumberFormatException
@@ -100,6 +99,27 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 
 					return new LitInt(yyline, yycolumn, num);
 				}
+{DecLongLiteral}		{
+					Long num;
+
+					// Guaranteed to end in L or l
+					String numText = yytext().substring(0, yytext().length()-1);
+
+					// throws NumberFormatException
+					num = Long.parseLong(yytext());
+
+					return new LitLong(yyline, yycolumn, num);
+				}
+'.'				{
+					// character guaranteed to be 2nd char, of 3
+					Character c = yytext().charAt(1);
+
+					return new LitChar(yyline, yycolumn, c);
+				}
+
+
+// Idents
+{Identifier}			{ return new Identifier(yyline, yycolumn, yytext()); }
 
 // Error
 [^]		{ throw new UnexpectedCharacterException(yytext(), yyline, yycolumn); }
