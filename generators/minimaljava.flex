@@ -35,7 +35,7 @@ Comment = "//" {InputCharacter}*{LineTerminator}?
 Identifier = [:jletter:][:jletterdigit:]*
 DecIntegerLiteral = 0|[1-9][0-9]*
 DecLongLiteral = 0[Ll]|[1-9][0-9]*[Ll]
-
+DecDoubleLiteral = (0|[1-9][0-9]*)\.[0-9]*
 
 %%
 
@@ -79,7 +79,7 @@ DecLongLiteral = 0[Ll]|[1-9][0-9]*[Ll]
 
 // Random
 
-<YYINITIAL> "."		{ return new Period(yyline, yycolumn);}
+<YYINITIAL> "\."		{ return new Period(yyline, yycolumn);}
 <YYINITIAL> ";"		{ return new Semicolon(yyline, yycolumn);}
 
 // Ignore comments and whitespace
@@ -115,6 +115,14 @@ DecLongLiteral = 0[Ll]|[1-9][0-9]*[Ll]
 					Character c = yytext().charAt(1);
 
 					return new LitChar(yyline, yycolumn, c);
+				}
+{DecDoubleLiteral}	{
+					double num;
+
+					// throws NumberFormatException
+					num = Double.parseDouble(yytext());
+
+					return new LitDouble(yyline, yycolumn, num);
 				}
 
 
