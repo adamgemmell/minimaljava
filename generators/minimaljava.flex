@@ -33,9 +33,9 @@ WhiteSpace		= {LineTerminator}|[ \t\f]
 Comment = "//" {InputCharacter}*{LineTerminator}?
 
 Identifier = [:jletter:][:jletterdigit:]*
-DecIntegerLiteral = 0|[1-9][0-9]*
+DecIntegerLiteral = 0[^0-9]|[1-9][0-9]*
 DecLongLiteral = 0[Ll]|[1-9][0-9]*[Ll]
-DecDoubleLiteral = (0|[1-9][0-9]*)\.[0-9]*
+DecDoubleLiteral = (0[^0-9]|[1-9][0-9]*)\.[0-9]*
 
 %%
 
@@ -106,7 +106,7 @@ DecDoubleLiteral = (0|[1-9][0-9]*)\.[0-9]*
 					String numText = yytext().substring(0, yytext().length()-1);
 
 					// throws NumberFormatException
-					num = Long.parseLong(yytext());
+					num = Long.parseLong(numText);
 
 					return new LitLong(yyline, yycolumn, num);
 				}
