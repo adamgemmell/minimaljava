@@ -1,43 +1,59 @@
 package com.ajsg2.minimaljava
 
-import com.ajsg2.minimaljava.common.tokens.UnexpectedCharacterException
+import com.ajsg2.minimaljava.common.tokens.{Token, UnexpectedCharacterException}
 import com.ajsg2.minimaljava.lex.Lexer
 import com.typesafe.scalalogging.Logger
-import java.io.{BufferedReader, FileReader}
+import java.io.{BufferedReader, FileReader, InputStreamReader, Reader}
 
-object MiniJavaC extends App {
+object MiniJavaC {
 
-	val logger = Logger(this.getClass.getName)
 
-	logger.debug("MiniJavaC started")
+	def main(args: Array[String]): Unit = {
 
-	if (args.length == 0) {
-		logger.error("Filename not provided")
+		val logger = Logger(this.getClass.getName)
 
-	} else {
-		val flags: Seq[String] = args.dropRight(1).toList
+		logger.debug("MiniJavaC started")
 
-		if (flags.isEmpty) {
-			logger.debug("No flags chosen")
-		} else {
-			logger.debug("Using flags: " + flags)
+		var fileName: Option[String] = None
+		var interactive = false
+
+		args.foreach(a =>
+			if (a.charAt(0) != '-') {
+				fileName = Some(a)
+				logger.debug("Filename: " + a)
+			} else if (a.equals("-interactive")) {
+				interactive = true
+				logger.debug("Using interactive mode")
+			}
+
+		)
+
+		if (fileName.isEmpty && !interactive) {
+			logger.error("No filename specified")
 		}
 
-		val reader = new BufferedReader(new FileReader(args.last))
+		val reader: Reader =
+			if (interactive) {
+				new BufferedReader(new InputStreamReader(System.in))
+
+			} else {
+				new BufferedReader(new FileReader(fileName.get))
+			}
 
 		val lexer = new Lexer(reader)
+		var token: Option[Token] = None
 
-		try {
-			var token = lexer.yylex()
-
-			while (token != null) {
+		do {
+			try {
+				token = Some(lexer.yylex())
 				println(token)
-				token = lexer.yylex()
+			} catch {
+				case e: UnexpectedCharacterException => logger.error(e.getMessage)
+				case e: NumberFormatException => logger.error(e.getMessage)
+				case e: Exception => logger.error(e.getMessage)
+
 			}
-		} catch {
-			case e: UnexpectedCharacterException => logger.error(e.getMessage)
-			case e: NumberFormatException => logger.error(e.getMessage)
-			case e: Exception => logger.error(e.getMessage)
-		}
+
+		} while (token != null)
 	}
 }
