@@ -41,19 +41,17 @@ object MiniJavaC {
 			}
 
 		val lexer = new Lexer(reader)
-		var token: Option[Token] = None
+		var token: Token = null
 
 		do {
 			try {
-				token = Some(lexer.yylex())
+				token = lexer.yylex()
 				println(token)
 			} catch {
 				case e: UnexpectedCharacterException => logger.error(e.getMessage)
 				case e: NumberFormatException => logger.error(e.getMessage)
 				case e: Exception => logger.error(e.getMessage)
-
 			}
-
 		} while (token != null)
 	}
 }

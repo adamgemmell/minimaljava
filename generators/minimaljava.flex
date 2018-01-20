@@ -33,9 +33,9 @@ WhiteSpace		= {LineTerminator}|[ \t\f]
 Comment = "//" {InputCharacter}*{LineTerminator}?
 
 Identifier = [:jletter:][:jletterdigit:]*
-DecIntegerLiteral = 0[^0-9]|[1-9][0-9]*
+DecIntegerLiteral = [0-9]+
 DecLongLiteral = 0[Ll]|[1-9][0-9]*[Ll]
-DecDoubleLiteral = (0[^0-9]|[1-9][0-9]*)\.[0-9]*
+DecDoubleLiteral = (0|[0-9]*)\.[0-9]*
 
 %%
 
