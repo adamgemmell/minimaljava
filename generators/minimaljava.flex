@@ -48,6 +48,7 @@ DecDoubleLiteral = (0|[0-9]*)\.[0-9]*
 <YYINITIAL> "extends"	{ return new KeywordExtends(yyline, yycolumn);}
 <YYINITIAL> "if"		{ return new KeywordIf(yyline, yycolumn);}
 <YYINITIAL> "else"	{ return new KeywordElse(yyline, yycolumn);}
+<YYINITIAL> "null"	{ return new KeywordNull(yyline, yycolumn);}
 
 
 // Primitive types
