@@ -26,7 +26,8 @@ public abstract class ValueToken<T> implements Token {
 		return val;
 	}
 
+	@Override
 	public String toString() {
-		return "[" + this.getClass().getSimpleName().toString() + ": " + val.toString() + "]";
+		return "[" + this.getClass().getSimpleName() + ": " + val.toString() + "]";
 	}
 }
