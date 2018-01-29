@@ -4,15 +4,13 @@
 
 package com.ajsg2.minimaljava.lex;
 
-import com.ajsg2.minimaljava.common.tokens.*;
-import com.ajsg2.minimaljava.common.tokens.simple.*;
-import com.ajsg2.minimaljava.common.tokens.value.*;
+import java_cup.runtime.*;
 
 /**
  * The Minimal Java Lexer
  */
 
-public class Lexer {
+public class Lexer implements java_cup.runtime.Scanner {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
@@ -465,7 +463,13 @@ public class Lexer {
   private int zzFinalHighSurrogate = 0;
 
   /* user code: */
-    //empty
+	private Symbol symbol(int type) {
+     		return new Symbol(type, yyline+1, yycolumn+1);
+     	}
+
+      private Symbol symbol(int type, Object value) {
+      	return new Symbol(type, yyline+1, yycolumn+1, value);
+      }
 
 
   /**
@@ -710,7 +714,7 @@ public class Lexer {
    * @return      the next token
    * @exception   java.io.IOException  if any I/O-Error occurs
    */
-  public Token yylex() throws java.io.IOException, UnexpectedCharacterException,NumberFormatException {
+  public java_cup.runtime.Symbol next_token() throws java.io.IOException {
     int zzInput;
     int zzAction;
 
@@ -847,7 +851,7 @@ public class Lexer {
       if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
         zzAtEOF = true;
             zzDoEOF();
-        return null;
+          { return new java_cup.runtime.Symbol(sym.EOF); }
       }
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {

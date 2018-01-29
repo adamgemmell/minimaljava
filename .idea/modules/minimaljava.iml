@@ -51,5 +51,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="com.github.vbmacher:java-cup:11b" level="project" />
   </component>
 </module>

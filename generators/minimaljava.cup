@@ -1,0 +1,37 @@
+terminal BRACKETL, BRACKETR, CURLYBRACEL, CURLYBRACER, SEMICOLON, PERIOD;
+terminal CLASS, ELSE, EXTENDS, IF, NEW, NULL, RETURN, VOID;
+terminal ASSIGN, BINOP, UNOP, BOOLBINOP, BOOLUNOP;
+terminal IDENT, LITINT, LITCHAR, LITLONG, LITDOUBLE, LITBOOL;
+terminal INT, CHAR, LONG, DOUBLE, BOOL;
+
+non terminal lit, type, value;
+non terminal program, classdef, classdeflist, fielddef, fielddeflist,
+    constructordef, methoddef, methoddeflist;
+
+lit ::= LITINT | LITCHAR | LITLONG | LITDOUBLE | LITBOOL;
+type ::= INT | CHAR | LONG | DOUBLE | BOOL;
+value ::= IDENT | lit;
+
+program ::= classdeflist;
+
+classdeflist ::= classdef:cd classdeflist:cdl
+    | //emtpy
+    ;
+
+classdef ::= CLASS IDENT:id EXTENDS IDENT:id2
+    CURLYBRACEL fielddeflist:fdl constructordef:cnd methoddeflist:mdl CURLYBRACER;
+
+fielddef ::= type IDENT:id SEMICOLON;
+
+fielddeflist ::= fielddef:fd fielddeflist:fdl
+    | //empty
+    ;
+
+methoddeflist ::= methoddef:md methoddeflist
+    | //empty
+    ;
+
+
+
+
+
