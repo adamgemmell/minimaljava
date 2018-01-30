@@ -46,7 +46,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import org.junit.jupiter.api.Test;
 
-class LexerTest {
+class LexerOldTest {
 
 	private BufferedReader mockReader(String fileContents) {
 		return new BufferedReader(new StringReader(fileContents));
@@ -57,7 +57,7 @@ class LexerTest {
 		String file = "class";
 
 		try (Reader reader = mockReader(file)) {
-			Lexer lexer = new Lexer(reader);
+			LexerOld lexer = new LexerOld(reader);
 
 			Token classToken = lexer.yylex();
 			assertTrue(classToken instanceof KeywordClass,
@@ -75,7 +75,7 @@ class LexerTest {
 		String filePath = "as;dofihasofi";
 
 		try {
-			new Lexer(new BufferedReader(new FileReader(filePath)));
+			new LexerOld(new BufferedReader(new FileReader(filePath)));
 			fail("No exception thrown");
 		} catch (FileNotFoundException e) {
 			// Success
@@ -89,7 +89,7 @@ class LexerTest {
 		String file = "class\nextends\nnew\nreturn\nvoid";
 
 		try (Reader reader = mockReader(file)) {
-			Lexer lexer = new Lexer(reader);
+			LexerOld lexer = new LexerOld(reader);
 
 			Token token = lexer.yylex();
 			assertTrue(token instanceof KeywordClass,
@@ -122,7 +122,7 @@ class LexerTest {
 		String file = "boolean\nchar\ndouble\nint\nlong";
 
 		try (Reader reader = mockReader(file)) {
-			Lexer lexer = new Lexer(reader);
+			LexerOld lexer = new LexerOld(reader);
 
 			Token token = lexer.yylex();
 			assertTrue(token instanceof TypeBoolean,
@@ -155,7 +155,7 @@ class LexerTest {
 		String file = "= && / == > >= - % * ! || +";
 
 		try (Reader reader = mockReader(file)) {
-			Lexer lexer = new Lexer(reader);
+			LexerOld lexer = new LexerOld(reader);
 
 			Token token = lexer.yylex();
 			assertTrue(token instanceof Assignment,
@@ -209,7 +209,7 @@ class LexerTest {
 		String file = "(){}";
 
 		try (Reader reader = mockReader(file)) {
-			Lexer lexer = new Lexer(reader);
+			LexerOld lexer = new LexerOld(reader);
 
 			Token token = lexer.yylex();
 			assertTrue(token instanceof BracketL,
@@ -239,7 +239,7 @@ class LexerTest {
 		String file = ". ;\n//this is a comment including a keyword class\nclass";
 
 		try (Reader reader = mockReader(file)) {
-			Lexer lexer = new Lexer(reader);
+			LexerOld lexer = new LexerOld(reader);
 
 			Token token = lexer.yylex();
 			assertTrue(token instanceof Period,
@@ -266,7 +266,7 @@ class LexerTest {
 		String file = "randomidentifier Class\nCLASS";
 
 		try (Reader reader = mockReader(file)) {
-			Lexer lexer = new Lexer(reader);
+			LexerOld lexer = new LexerOld(reader);
 
 			Token token;
 			Identifier ident;
@@ -310,7 +310,7 @@ class LexerTest {
 		String file = "true false\nfalsetrue";
 
 		try (Reader reader = mockReader(file)) {
-			Lexer lexer = new Lexer(reader);
+			LexerOld lexer = new LexerOld(reader);
 
 			Token token;
 			LitBool bool;
@@ -346,7 +346,7 @@ class LexerTest {
 		String file = "69 420 \n-846123 0123";
 
 		try (Reader reader = mockReader(file)) {
-			Lexer lexer = new Lexer(reader);
+			LexerOld lexer = new LexerOld(reader);
 
 			Token token;
 			LitInt integer;
@@ -393,7 +393,7 @@ class LexerTest {
 		String file = "69L 69 \n" + num + "L";
 
 		try (Reader reader = mockReader(file)) {
-			Lexer lexer = new Lexer(reader);
+			LexerOld lexer = new LexerOld(reader);
 
 			Token token;
 			LitLong longNum;

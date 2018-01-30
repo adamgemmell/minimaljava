@@ -1,37 +1,56 @@
-terminal BRACKETL, BRACKETR, CURLYBRACEL, CURLYBRACER, SEMICOLON, PERIOD;
-terminal CLASS, ELSE, EXTENDS, IF, NEW, NULL, RETURN, VOID;
-terminal ASSIGN, BINOP, UNOP, BOOLBINOP, BOOLUNOP;
+terminal BRACKETL, BRACKETR, CURLYBRACEL, CURLYBRACER, SEMICOLON, PERIOD, COMMA;
+terminal CLASS, ELSE, EXTENDS, IF, NEW, NULL, RETURN, VOID, SUPER;
+terminal ASSIGN, AND, DIV, EQ, GT, GTE, MINUS, MOD, MULT, NOT, OR, PLUS;
 terminal IDENT, LITINT, LITCHAR, LITLONG, LITDOUBLE, LITBOOL;
 terminal INT, CHAR, LONG, DOUBLE, BOOL;
 
-non terminal lit, type, value;
+non terminal lit, type;
 non terminal program, classdef, classdeflist, fielddef, fielddeflist,
-    constructordef, methoddef, methoddeflist;
+    methoddef, methoddeflist, arg, arglist, arglistcomma,
+    statement, statementlist, expression, promexpression;
+non terminal name, simplename, qualifiedname;
+non terminal constructordef, constructordecl, constructorbody;
+
+start with program;
 
 lit ::= LITINT | LITCHAR | LITLONG | LITDOUBLE | LITBOOL;
-type ::= INT | CHAR | LONG | DOUBLE | BOOL;
-value ::= IDENT | lit;
+type ::= INT | CHAR | LONG | DOUBLE | BOOL | name;
+expression ::= NULL | name |lit;
+
+name ::= simplename | qualifiedname;
+simplename ::= IDENT:id;
+qualifiedname ::= name PERIOD IDENT:id;
 
 program ::= classdeflist;
 
+classdef ::= CLASS simplename EXTENDS simplename
+    CURLYBRACEL fielddeflist:fdl constructordef:cnd methoddeflist:mdl CURLYBRACER;
 classdeflist ::= classdef:cd classdeflist:cdl
     | //emtpy
     ;
 
-classdef ::= CLASS IDENT:id EXTENDS IDENT:id2
-    CURLYBRACEL fielddeflist:fdl constructordef:cnd methoddeflist:mdl CURLYBRACER;
-
-fielddef ::= type IDENT:id SEMICOLON;
-
+fielddef ::= type simplename SEMICOLON;
 fielddeflist ::= fielddef:fd fielddeflist:fdl
     | //empty
     ;
 
+// Constructor
+constructordef ::= constructordecl constructorbody;
+constructordecl ::= simplename BRACKETL arglist BRACKETR;
+constructorbody ::= CURLYBRACEL SUPER BRACKETL arglist BRACKETR SEMICOLON statementlist;
+
+methoddef ::= type:type IDENT:id BRACKETL arglist:arg0 BRACKETR CURLYBRACEL
+    statementlist:stmlist CURLYBRACER
+    | VOID IDENT:id BRACKETL arglist:arg0 BRACKETR CURLYBRACEL
+          statementlist:stmlist CURLYBRACER;
 methoddeflist ::= methoddef:md methoddeflist
     | //empty
     ;
 
-
-
-
-
+arg ::= type:type IDENT:id;
+arglist ::= arg:arg arglistcomma
+    | //empty
+    ;
+arglistcomma ::= COMMA arg arglistcomma
+    | //empty
+    ;

@@ -12,7 +12,7 @@ import com.ajsg2.minimaljava.common.tokens.value.*;
 %%
 
 // Options
-%class Lexer
+%class LexerOld
 %unicode
 %line
 %column
@@ -20,6 +20,7 @@ import com.ajsg2.minimaljava.common.tokens.value.*;
 %type Token
 %yylexthrow UnexpectedCharacterException,NumberFormatException
 %eofclose
+%debug
 
 // Custom code block
 %{
