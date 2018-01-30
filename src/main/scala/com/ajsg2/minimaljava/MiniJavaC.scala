@@ -1,9 +1,9 @@
 package com.ajsg2.minimaljava
 
-import com.ajsg2.minimaljava.common.tokens.{Token, UnexpectedCharacterException}
 import com.ajsg2.minimaljava.lex.Lexer
+import com.ajsg2.minimaljava.parse.parser
 import com.typesafe.scalalogging.Logger
-import java.io.{BufferedReader, FileReader, InputStreamReader, Reader}
+import java.io._
 
 object MiniJavaC {
 
@@ -25,7 +25,6 @@ object MiniJavaC {
 				interactive = true
 				logger.debug("Using interactive mode")
 			}
-
 		)
 
 		if (fileName.isEmpty && !interactive) {
@@ -34,12 +33,21 @@ object MiniJavaC {
 
 		val reader: Reader =
 			if (interactive) {
-				new BufferedReader(new InputStreamReader(System.in))
-
+				new InputStreamReader(System.in)
 			} else {
-				new BufferedReader(new FileReader(fileName.get))
+				new FileReader(fileName.get)
 			}
 
+		/*val arg = new Array[String](1)
+		arg.update(0, fileName.get)
+		Lexer.main(arg)*/
+
+		val p = new parser(new Lexer(reader))
+
+		val result = p.debug_parse()
+		println(result)
+
+		/* Lexer only
 		val lexer = new Lexer(reader)
 		var token: Token = null
 
@@ -52,6 +60,6 @@ object MiniJavaC {
 				case e: NumberFormatException => logger.error(e.getMessage)
 				case e: Exception => logger.error(e.getMessage)
 			}
-		} while (token != null)
+		} while (token != null)*/
 	}
 }

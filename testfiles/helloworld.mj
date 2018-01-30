@@ -1,8 +1,5 @@
-class TestClass {
-	int wow(int n) {
-		return n+2;
-		// Comment
+class TestClass extends Object {
+	TestClass() {
+		super();
 	}
 }
-
-error incoming #
