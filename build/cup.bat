@@ -1,1 +1,1 @@
-java -jar lib\java-cup-11b-build.jar -destdir src\main\java\com\ajsg2\minimaljava\parse -package com.ajsg2.minimaljava.parse -expect 2 -nonterms generators\minimaljava.cup
+java -jar lib\java-cup-11b-build.jar -destdir src\main\java\com\ajsg2\minimaljava\parse -package com.ajsg2.minimaljava.parse -expect 10 -nonterms -parser Parser generators\minimaljava.cup

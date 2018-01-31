@@ -96,25 +96,29 @@ public class sym {
   /* non terminals */
   static final int lit = 0;
   static final int methoddef = 7;
+  static final int classdecl = 20;
   static final int fielddeflist = 6;
   static final int statement = 12;
   static final int arglist = 10;
-  static final int constructorbody = 21;
-  static final int type = 1;
+  static final int constructorbody = 25;
+  static final int type = 3;
   static final int qualifiedname = 18;
   static final int arg = 9;
   static final int simplename = 17;
   static final int arglistcomma = 11;
+  static final int classbody = 21;
   static final int statementlist = 13;
-  static final int program = 2;
-  static final int classdeflist = 4;
+  static final int program = 4;
+  static final int classdeflist = 22;
   static final int methoddeflist = 8;
   static final int promexpression = 15;
   static final int expression = 14;
   static final int fielddef = 5;
-  static final int constructordef = 19;
-  static final int constructordecl = 20;
-  static final int classdef = 3;
+  static final int numtype = 1;
+  static final int constructordef = 23;
+  static final int primtype = 2;
+  static final int constructordecl = 24;
+  static final int classdef = 19;
   static final int name = 16;
 }
 

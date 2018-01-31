@@ -1,5 +1,2 @@
 class TestClass extends Object {
-	TestClass() {
-		super();
-	}
 }

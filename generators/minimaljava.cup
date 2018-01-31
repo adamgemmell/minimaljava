@@ -1,20 +1,35 @@
+import com.ajsg2.minimaljava.lex.Lexer;
+import java_cup.runtime.SymbolFactory;
+
+parser code {:
+    public Parser(Lexer lex, SymbolFactory sf) {
+           super(lex,sf);
+         }
+:};
+
 terminal BRACKETL, BRACKETR, CURLYBRACEL, CURLYBRACER, SEMICOLON, PERIOD, COMMA;
 terminal CLASS, ELSE, EXTENDS, IF, NEW, NULL, RETURN, VOID, SUPER;
 terminal ASSIGN, AND, DIV, EQ, GT, GTE, MINUS, MOD, MULT, NOT, OR, PLUS;
 terminal IDENT, LITINT, LITCHAR, LITLONG, LITDOUBLE, LITBOOL;
 terminal INT, CHAR, LONG, DOUBLE, BOOL;
 
-non terminal lit, type;
-non terminal program, classdef, classdeflist, fielddef, fielddeflist,
+non terminal lit, numtype, primtype, type;
+non terminal program, fielddef, fielddeflist,
     methoddef, methoddeflist, arg, arglist, arglistcomma,
     statement, statementlist, expression, promexpression;
 non terminal name, simplename, qualifiedname;
+non terminal classdef, classdecl, classbody, classdeflist;
 non terminal constructordef, constructordecl, constructorbody;
+
+precedence left IDENT;
 
 start with program;
 
 lit ::= LITINT | LITCHAR | LITLONG | LITDOUBLE | LITBOOL;
-type ::= INT | CHAR | LONG | DOUBLE | BOOL | name;
+numtype ::= INT | CHAR | LONG | DOUBLE;
+primtype ::= numtype | BOOL;
+type ::= name | primtype;
+
 expression ::= NULL | name |lit;
 
 name ::= simplename | qualifiedname;
@@ -23,20 +38,22 @@ qualifiedname ::= name PERIOD IDENT:id;
 
 program ::= classdeflist;
 
-classdef ::= CLASS simplename EXTENDS simplename
-    CURLYBRACEL fielddeflist:fdl constructordef:cnd methoddeflist:mdl CURLYBRACER;
+//Classes
+classdef ::=  classdecl classbody;
+classdecl ::= CLASS IDENT:classname EXTENDS name;
+classbody ::= CURLYBRACEL  CURLYBRACER;
 classdeflist ::= classdef:cd classdeflist:cdl
     | //emtpy
     ;
 
-fielddef ::= type simplename SEMICOLON;
-fielddeflist ::= fielddef:fd fielddeflist:fdl
+fielddef ::= type IDENT:varname SEMICOLON;
+fielddeflist ::= fielddef fielddeflist
     | //empty
     ;
 
 // Constructor
 constructordef ::= constructordecl constructorbody;
-constructordecl ::= simplename BRACKETL arglist BRACKETR;
+constructordecl ::= IDENT:id BRACKETL arglist BRACKETR;
 constructorbody ::= CURLYBRACEL SUPER BRACKETL arglist BRACKETR SEMICOLON statementlist;
 
 methoddef ::= type:type IDENT:id BRACKETL arglist:arg0 BRACKETR CURLYBRACEL
@@ -52,5 +69,9 @@ arglist ::= arg:arg arglistcomma
     | //empty
     ;
 arglistcomma ::= COMMA arg arglistcomma
+    | //empty
+    ;
+
+statementlist ::= statement statementlist
     | //empty
     ;
