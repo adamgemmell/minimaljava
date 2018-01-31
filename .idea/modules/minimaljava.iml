@@ -27,6 +27,9 @@
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../lib/byte-buddy-1.7.9.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib/byte-buddy-agent-1.7.9.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../lib/java-cup-11b-build.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../lib/java-cup-11b.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../lib/jflex-1.6.1.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib/mockito-core-2.13.0.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib/objenesis-2.6.jar!/" />
         </CLASSES>
@@ -34,11 +37,11 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="sbt: org.slf4j:slf4j-api:1.7.25:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.scala-lang:scala-reflect:2.12.3:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.scala-lang:scala-library:2.12.3:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.typesafe.scala-logging:scala-logging_2.12:3.7.2:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.github.vbmacher:java-cup-runtime:11b:jar" level="project" />
     <orderEntry type="library" name="sbt: ch.qos.logback:logback-core:1.2.3:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.typesafe.scala-logging:scala-logging_2.12:3.7.2:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.slf4j:slf4j-api:1.7.25:jar" level="project" />
+    <orderEntry type="library" name="scala-sdk-2.12.4" level="project" />
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit5.0">
         <CLASSES>
@@ -51,6 +54,5 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="com.github.vbmacher:java-cup:11b" level="project" />
   </component>
 </module>

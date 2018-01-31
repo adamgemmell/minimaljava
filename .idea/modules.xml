@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minimaljava.iml" filepath="$PROJECT_DIR$/.idea/modules/minimaljava.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minimaljava-build.iml" filepath="$PROJECT_DIR$/.idea/modules/minimaljava-build.iml" />
     </modules>
   </component>
 </project>
