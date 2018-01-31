@@ -41,7 +41,7 @@ program ::= classdeflist;
 //Classes
 classdef ::=  classdecl classbody;
 classdecl ::= CLASS IDENT:classname EXTENDS name;
-classbody ::= CURLYBRACEL  CURLYBRACER;
+classbody ::= CURLYBRACEL fielddeflist constructordef methoddeflist CURLYBRACER;
 classdeflist ::= classdef:cd classdeflist:cdl
     | //emtpy
     ;
