@@ -1,12 +1,3 @@
-import com.ajsg2.minimaljava.lex.Lexer;
-import java_cup.runtime.SymbolFactory;
-
-parser code {:
-    public Parser(Lexer lex, SymbolFactory sf) {
-           super(lex,sf);
-         }
-:};
-
 terminal BRACKETL, BRACKETR, CURLYBRACEL, CURLYBRACER, SEMICOLON, PERIOD, COMMA;
 terminal CLASS, ELSE, EXTENDS, IF, NEW, NULL, RETURN, VOID, SUPER;
 terminal ASSIGN, AND, DIV, EQ, GT, GTE, MINUS, MOD, MULT, NOT, OR, PLUS;
@@ -14,17 +5,18 @@ terminal IDENT, LITINT, LITCHAR, LITLONG, LITDOUBLE, LITBOOL;
 terminal INT, CHAR, LONG, DOUBLE, BOOL;
 
 non terminal lit, numtype, primtype, type;
-non terminal program, fielddef, fielddeflist,
-    methoddef, methoddeflist, arg, arglist, arglistcomma,
+non terminal program, fielddef,
+    methoddef, param, paramlist, paramlistcomma,
     statement, statementlist, expression, promexpression;
 non terminal name, simplename, qualifiedname;
-non terminal classdef, classdecl, classbody, classdeflist;
+non terminal classdef, classdecl, classbody, classbodydecls, classbodydecl, classdeflist;
 non terminal constructordef, constructordecl, constructorbody;
 
 precedence left IDENT;
 
 start with program;
 
+//Simple types
 lit ::= LITINT | LITCHAR | LITLONG | LITDOUBLE | LITBOOL;
 numtype ::= INT | CHAR | LONG | DOUBLE;
 primtype ::= numtype | BOOL;
@@ -32,6 +24,7 @@ type ::= name | primtype;
 
 expression ::= NULL | name |lit;
 
+// Names
 name ::= simplename | qualifiedname;
 simplename ::= IDENT:id;
 qualifiedname ::= name PERIOD IDENT:id;
@@ -41,37 +34,35 @@ program ::= classdeflist;
 //Classes
 classdef ::=  classdecl classbody;
 classdecl ::= CLASS IDENT:classname EXTENDS name;
-classbody ::= CURLYBRACEL fielddeflist constructordef methoddeflist CURLYBRACER;
-classdeflist ::= classdef:cd classdeflist:cdl
-    | //emtpy
+classbody ::= CURLYBRACEL classbodydecls CURLYBRACER
+    | CURLYBRACEL CURLYBRACER;
+classbodydecls ::= classbodydecl
+    | classbodydecls classbodydecl;
+classbodydecl ::= fielddef
+    | methoddef
+    | constructordef;
+
+classdeflist ::= classdef
+    | classdef:cd classdeflist:cdl
     ;
 
-fielddef ::= type IDENT:varname SEMICOLON;
-fielddeflist ::= fielddef fielddeflist
-    | //empty
-    ;
+//Fields
+fielddef ::= type IDENT SEMICOLON;
 
 // Constructor
 constructordef ::= constructordecl constructorbody;
-constructordecl ::= IDENT:id BRACKETL arglist BRACKETR;
-constructorbody ::= CURLYBRACEL SUPER BRACKETL arglist BRACKETR SEMICOLON statementlist;
+constructordecl ::= IDENT:id BRACKETL BRACKETR;
+constructorbody ::= CURLYBRACEL SUPER BRACKETL paramlist BRACKETR SEMICOLON CURLYBRACER
+    | CURLYBRACEL SUPER BRACKETL BRACKETR SEMICOLON CURLYBRACER;
 
-methoddef ::= type:type IDENT:id BRACKETL arglist:arg0 BRACKETR CURLYBRACEL
-    statementlist:stmlist CURLYBRACER
-    | VOID IDENT:id BRACKETL arglist:arg0 BRACKETR CURLYBRACEL
-          statementlist:stmlist CURLYBRACER;
-methoddeflist ::= methoddef:md methoddeflist
-    | //empty
-    ;
+methoddef ::= type:type IDENT:id BRACKETL paramlist:param0 BRACKETR CURLYBRACEL CURLYBRACER
+    | VOID IDENT:id BRACKETL paramlist:param0 BRACKETR CURLYBRACEL CURLYBRACER;
 
-arg ::= type:type IDENT:id;
-arglist ::= arg:arg arglistcomma
-    | //empty
-    ;
-arglistcomma ::= COMMA arg arglistcomma
-    | //empty
-    ;
+// parameterss
+param ::= type:type IDENT:id;
+paramlist ::= param
+    | param:param paramlistcomma;
+paramlistcomma ::= COMMA paramlist;
 
-statementlist ::= statement statementlist
-    | //empty
-    ;
+statementlist ::= statement
+    | statement statementlist;

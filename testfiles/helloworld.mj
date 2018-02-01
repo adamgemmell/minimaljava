@@ -1,2 +1,17 @@
 class TestClass extends Object {
+
+    void wow(int n){
+
+    }
+
+
+    int potato;
+    char wow;
+    double trouble;
+
+    TestClass(){
+          super();
+    }
+
+
 }

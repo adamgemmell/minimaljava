@@ -9,13 +9,12 @@ import java_cup.runtime.XMLElement
 
 object MiniJavaC {
 
-
 	def main(args: Array[String]): Unit = {
 
 		val logger = Logger(this.getClass.getName)
 
 		logger.debug("MiniJavaC started")
-
+		
 		var fileName: Option[String] = None
 		var interactive = false
 
