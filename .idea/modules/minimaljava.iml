@@ -22,6 +22,12 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="sbt: ch.qos.logback:logback-classic:1.2.3:jar" level="project" />
+    <orderEntry type="library" name="sbt: ch.qos.logback:logback-core:1.2.3:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.github.vbmacher:java-cup-runtime:11b:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.typesafe.scala-logging:scala-logging_2.12:3.7.2:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang:scala-library:2.12.4:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang:scala-reflect:2.12.4:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.slf4j:slf4j-api:1.7.25:jar" level="project" />
     <orderEntry type="module-library">
       <library name="sbt: unmanaged-jars">
         <CLASSES>
@@ -37,18 +43,13 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="sbt: com.github.vbmacher:java-cup-runtime:11b:jar" level="project" />
-    <orderEntry type="library" name="sbt: ch.qos.logback:logback-core:1.2.3:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.typesafe.scala-logging:scala-logging_2.12:3.7.2:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.slf4j:slf4j-api:1.7.25:jar" level="project" />
-    <orderEntry type="library" name="scala-sdk-2.12.4" level="project" />
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit5.0">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.0.0/junit-jupiter-api-5.0.0.jar!/" />
-          <root url="jar://$USER_HOME$/.m2/repository/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar!/" />
-          <root url="jar://$USER_HOME$/.m2/repository/org/opentest4j/opentest4j/1.0.0/opentest4j-1.0.0.jar!/" />
-          <root url="jar://$USER_HOME$/.m2/repository/org/junit/platform/junit-platform-commons/1.0.0/junit-platform-commons-1.0.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter-api/5.0.0/junit-jupiter-api-5.0.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/opentest4j/opentest4j/1.0.0/opentest4j-1.0.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-commons/1.0.0/junit-platform-commons-1.0.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
