@@ -1,17 +1,13 @@
 class TestClass extends Object {
-
-    void wow(int n){
-
-    }
-
-
-    int potato;
-    char wow;
-    double trouble;
-
     TestClass(){
           super();
     }
 
-
+    void wow(int a, char b){
+        if(x == null){
+            return x;
+        } else {
+            return null;
+        }
+    }
 }

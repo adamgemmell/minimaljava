@@ -4,13 +4,15 @@ terminal ASSIGN, AND, DIV, EQ, GT, GTE, MINUS, MOD, MULT, NOT, OR, PLUS;
 terminal IDENT, LITINT, LITCHAR, LITLONG, LITDOUBLE, LITBOOL;
 terminal INT, CHAR, LONG, DOUBLE, BOOL;
 
-non terminal lit, numtype, primtype, type;
-non terminal program, fielddef,
-    methoddef, param, paramlist, paramlistcomma,
-    statement, statementlist, expression, promexpression;
+non terminal lit, numtype, primtype, type, block, localvardef, ifelse;
+non terminal program;
+non terminal param, paramlist, paramlistcomma;
+non terminal statement, statementlist, expression, promexpression, prim;
+non terminal fielddef, fieldassignment;
 non terminal name, simplename, qualifiedname;
 non terminal classdef, classdecl, classbody, classbodydecls, classbodydecl, classdeflist;
 non terminal constructordef, constructordecl, constructorbody;
+non terminal methoddef, methoddecl, methodbody, methodheader;
 
 precedence left IDENT;
 
@@ -22,7 +24,13 @@ numtype ::= INT | CHAR | LONG | DOUBLE;
 primtype ::= numtype | BOOL;
 type ::= name | primtype;
 
-expression ::= NULL | name |lit;
+ifelse ::= IF BRACKETL expression EQ expression BRACKETR block ELSE block;
+
+expression ::= name
+    | NULL
+    | promexpression
+    | BRACKETL name BRACKETR expression
+    | prim;
 
 // Names
 name ::= simplename | qualifiedname;
@@ -47,7 +55,8 @@ classdeflist ::= classdef
     ;
 
 //Fields
-fielddef ::= type IDENT SEMICOLON;
+fielddef ::= type simplename SEMICOLON;
+localvardef ::= type simplename;
 
 // Constructor
 constructordef ::= constructordecl constructorbody;
@@ -55,14 +64,31 @@ constructordecl ::= IDENT:id BRACKETL BRACKETR;
 constructorbody ::= CURLYBRACEL SUPER BRACKETL paramlist BRACKETR SEMICOLON CURLYBRACER
     | CURLYBRACEL SUPER BRACKETL BRACKETR SEMICOLON CURLYBRACER;
 
-methoddef ::= type:type IDENT:id BRACKETL paramlist:param0 BRACKETR CURLYBRACEL CURLYBRACER
-    | VOID IDENT:id BRACKETL paramlist:param0 BRACKETR CURLYBRACEL CURLYBRACER;
+// Method
+methoddef ::= methodheader block;
+methodheader ::= type:type methoddecl
+    | VOID methoddecl;
+methoddecl ::= IDENT:id BRACKETL paramlist BRACKETR
+    | IDENT:id BRACKETL BRACKETR;
 
-// parameterss
+block ::= CURLYBRACEL CURLYBRACER
+    | CURLYBRACEL statementlist CURLYBRACER;
+
+// parameters
 param ::= type:type IDENT:id;
 paramlist ::= param
     | param:param paramlistcomma;
 paramlistcomma ::= COMMA paramlist;
 
+// Statements
 statementlist ::= statement
     | statement statementlist;
+statement ::= SEMICOLON
+    | localvardef SEMICOLON
+    | promexpression SEMICOLON
+    | ifelse
+    | fieldassignment SEMICOLON
+    | RETURN expression SEMICOLON
+    | block;
+
+fieldassignment ::= name ASSIGN expression;
