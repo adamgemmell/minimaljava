@@ -94,39 +94,40 @@ public class sym {
   };
 
   /* non terminals */
-  static final int methoddef = 30;
+  static final int methoddef = 31;
   static final int lit = 0;
-  static final int classdecl = 22;
-  static final int localvardef = 5;
+  static final int classdecl = 23;
+  static final int localvardef = 18;
   static final int statement = 11;
   static final int prim = 15;
-  static final int constructorbody = 29;
+  static final int constructorbody = 30;
   static final int type = 3;
-  static final int qualifiedname = 20;
-  static final int simplename = 19;
+  static final int qualifiedname = 21;
+  static final int simplename = 20;
   static final int param = 8;
-  static final int classbody = 23;
+  static final int classbody = 24;
   static final int statementlist = 12;
-  static final int methoddecl = 31;
+  static final int methoddecl = 32;
   static final int program = 7;
-  static final int block = 4;
-  static final int methodheader = 33;
-  static final int classdeflist = 26;
+  static final int block = 5;
+  static final int methodheader = 34;
+  static final int classdeflist = 27;
   static final int promexpression = 14;
-  static final int classbodydecl = 25;
+  static final int classbodydecl = 26;
   static final int expression = 13;
   static final int fielddef = 16;
   static final int ifelse = 6;
   static final int fieldassignment = 17;
-  static final int methodbody = 32;
+  static final int infixop = 4;
+  static final int methodbody = 33;
   static final int numtype = 1;
-  static final int constructordef = 27;
+  static final int constructordef = 28;
   static final int primtype = 2;
-  static final int constructordecl = 28;
-  static final int classdef = 21;
+  static final int constructordecl = 29;
+  static final int classdef = 22;
   static final int paramlist = 9;
-  static final int classbodydecls = 24;
+  static final int classbodydecls = 25;
   static final int paramlistcomma = 10;
-  static final int name = 18;
+  static final int name = 19;
 }
 

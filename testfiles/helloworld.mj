@@ -5,9 +5,9 @@ class TestClass extends Object {
 
     void wow(int a, char b){
         if(x == null){
-            return x;
+            return 0;
         } else {
-            return null;
+            return x+3;
         }
     }
 }

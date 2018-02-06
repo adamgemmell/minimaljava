@@ -4,33 +4,35 @@ terminal ASSIGN, AND, DIV, EQ, GT, GTE, MINUS, MOD, MULT, NOT, OR, PLUS;
 terminal IDENT, LITINT, LITCHAR, LITLONG, LITDOUBLE, LITBOOL;
 terminal INT, CHAR, LONG, DOUBLE, BOOL;
 
-non terminal lit, numtype, primtype, type, block, localvardef, ifelse;
+non terminal lit, numtype, primtype, type, infixop, block, ifelse;
 non terminal program;
 non terminal param, paramlist, paramlistcomma;
 non terminal statement, statementlist, expression, promexpression, prim;
-non terminal fielddef, fieldassignment;
+non terminal fielddef, fieldassignment, localvardef;
 non terminal name, simplename, qualifiedname;
 non terminal classdef, classdecl, classbody, classbodydecls, classbodydecl, classdeflist;
 non terminal constructordef, constructordecl, constructorbody;
-non terminal methoddef, methoddecl, methodbody, methodheader;
+non terminal methoddef, methoddecl, methodheader;
 
-precedence left IDENT;
+//Precedences
+precedence left PLUS, MINUS;
+precedence left MULT, DIV;
+precedence left MOD;
+precedence left GTE, GT;
+precedence left AND, OR;
+precedence left EQ;
 
 start with program;
 
 //Simple types
-lit ::= LITINT | LITCHAR | LITLONG | LITDOUBLE | LITBOOL;
 numtype ::= INT | CHAR | LONG | DOUBLE;
 primtype ::= numtype | BOOL;
 type ::= name | primtype;
 
-ifelse ::= IF BRACKETL expression EQ expression BRACKETR block ELSE block;
-
-expression ::= name
-    | NULL
-    | promexpression
-    | BRACKETL name BRACKETR expression
-    | prim;
+//Low-level expressions
+lit ::= LITINT | LITCHAR | LITLONG | LITDOUBLE | LITBOOL;
+infixop ::= PLUS | MINUS | MULT | DIV | MOD
+    | GT | GTE | AND | OR | EQ;
 
 // Names
 name ::= simplename | qualifiedname;
@@ -60,7 +62,8 @@ localvardef ::= type simplename;
 
 // Constructor
 constructordef ::= constructordecl constructorbody;
-constructordecl ::= IDENT:id BRACKETL BRACKETR;
+constructordecl ::= IDENT:id BRACKETL paramlist BRACKETR
+    | IDENT:id BRACKETL BRACKETR;
 constructorbody ::= CURLYBRACEL SUPER BRACKETL paramlist BRACKETR SEMICOLON CURLYBRACER
     | CURLYBRACEL SUPER BRACKETL BRACKETR SEMICOLON CURLYBRACER;
 
@@ -92,3 +95,17 @@ statement ::= SEMICOLON
     | block;
 
 fieldassignment ::= name ASSIGN expression;
+
+ifelse ::= IF BRACKETL expression EQ expression BRACKETR block ELSE block;
+
+expression ::= name
+    | NULL
+    | promexpression
+    | BRACKETL name BRACKETR expression
+    | prim;
+
+prim ::= lit
+    | name
+    | prim infixop prim
+    | BRACKETL prim BRACKETR
+    | NOT prim;
