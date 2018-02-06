@@ -19,7 +19,6 @@ public class Lexer implements java_cup.runtime.Scanner {
 
   /** initial size of the lookahead buffer */
   private static final int ZZ_BUFFERSIZE = 16384;
-  private static final String ZZ_NL = System.getProperty("line.separator");
 
   /** lexical states */
   public static final int YYINITIAL = 0;
@@ -507,23 +506,6 @@ public class Lexer implements java_cup.runtime.Scanner {
     return map;
   }
 
-  private static String zzToPrintable(String str) {
-    StringBuilder builder = new StringBuilder();
-    for (int n = 0 ; n < str.length() ; ) {
-      int ch = str.codePointAt(n);
-      int charCount = Character.charCount(ch);
-      n += charCount;
-      if (ch > 31 && ch < 127) {
-        builder.append((char)ch);
-      } else if (charCount == 1) {
-        builder.append(String.format("\\u%04X", ch));
-      } else {
-        builder.append(String.format("\\U%06X", ch));
-      }
-    }
-    return builder.toString();
-  }
-
 
   /**
    * Refills the input buffer.
@@ -880,32 +862,22 @@ public class Lexer implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [145] { throw new UnexpectedCharacterException(yytext(), yyline, yycolumn); }");
             { throw new UnexpectedCharacterException(yytext(), yyline, yycolumn);
             }
           case 43: break;
           case 2: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [100] {  }");
             { 
             }
           case 44: break;
           case 3: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [73] { return symbol(sym.DIV); }");
             { return symbol(sym.DIV);
             }
           case 45: break;
           case 4: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [142] { return symbol(sym.IDENT, yytext()); }");
             { return symbol(sym.IDENT, yytext());
             }
           case 46: break;
           case 5: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [106] { Integer num;"+ZZ_NL+"\t\t\t\t\t"+ZZ_NL+"\t\t\t\t\t// throws NumberFormatException"+ZZ_NL+"\t\t\t\t\tnum = Integer.parseInt(yytext());"+ZZ_NL+""+ZZ_NL+"\t\t\t\t\treturn  symbol(sym.LITINT, num); }");
             { Integer num;
 					
 					// throws NumberFormatException
@@ -915,92 +887,62 @@ public class Lexer implements java_cup.runtime.Scanner {
             }
           case 47: break;
           case 6: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [93] { return symbol(sym.PERIOD); }");
             { return symbol(sym.PERIOD);
             }
           case 48: break;
           case 7: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [71] { return symbol(sym.ASSIGN); }");
             { return symbol(sym.ASSIGN);
             }
           case 49: break;
           case 8: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [75] { return symbol(sym.GT); }");
             { return symbol(sym.GT);
             }
           case 50: break;
           case 9: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [77] { return symbol(sym.MINUS); }");
             { return symbol(sym.MINUS);
             }
           case 51: break;
           case 10: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [78] { return symbol(sym.MOD); }");
             { return symbol(sym.MOD);
             }
           case 52: break;
           case 11: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [79] { return symbol(sym.MULT); }");
             { return symbol(sym.MULT);
             }
           case 53: break;
           case 12: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [80] { return symbol(sym.NOT); }");
             { return symbol(sym.NOT);
             }
           case 54: break;
           case 13: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [82] { return symbol(sym.PLUS); }");
             { return symbol(sym.PLUS);
             }
           case 55: break;
           case 14: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [86] { return symbol(sym.BRACKETL); }");
             { return symbol(sym.BRACKETL);
             }
           case 56: break;
           case 15: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [87] { return symbol(sym.BRACKETR); }");
             { return symbol(sym.BRACKETR);
             }
           case 57: break;
           case 16: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [88] { return symbol(sym.CURLYBRACEL); }");
             { return symbol(sym.CURLYBRACEL);
             }
           case 58: break;
           case 17: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [89] { return symbol(sym.CURLYBRACER); }");
             { return symbol(sym.CURLYBRACER);
             }
           case 59: break;
           case 18: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [94] { return symbol(sym.SEMICOLON); }");
             { return symbol(sym.SEMICOLON);
             }
           case 60: break;
           case 19: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [95] { return symbol(sym.COMMA); }");
             { return symbol(sym.COMMA);
             }
           case 61: break;
           case 20: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [114] { Long num;"+ZZ_NL+""+ZZ_NL+"\t\t\t\t\t// Guaranteed to end in L or l"+ZZ_NL+"\t\t\t\t\tString numText = yytext().substring(0, yytext().length()-1);"+ZZ_NL+""+ZZ_NL+"\t\t\t\t\t// throws NumberFormatException"+ZZ_NL+"\t\t\t\t\tnum = Long.parseLong(numText);"+ZZ_NL+""+ZZ_NL+"\t\t\t\t\treturn symbol(sym.LITLONG, num); }");
             { Long num;
 
 					// Guaranteed to end in L or l
@@ -1013,8 +955,6 @@ public class Lexer implements java_cup.runtime.Scanner {
             }
           case 62: break;
           case 21: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [131] { double num;"+ZZ_NL+""+ZZ_NL+"\t\t\t\t\t// throws NumberFormatException"+ZZ_NL+"\t\t\t\t\tnum = Double.parseDouble(yytext());"+ZZ_NL+""+ZZ_NL+"\t\t\t\t\treturn symbol(sym.LITDOUBLE, num); }");
             { double num;
 
 					// throws NumberFormatException
@@ -1024,50 +964,34 @@ public class Lexer implements java_cup.runtime.Scanner {
             }
           case 63: break;
           case 22: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [55] { return symbol(sym.IF); }");
             { return symbol(sym.IF);
             }
           case 64: break;
           case 23: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [74] { return symbol(sym.EQ); }");
             { return symbol(sym.EQ);
             }
           case 65: break;
           case 24: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [72] { return symbol(sym.AND); }");
             { return symbol(sym.AND);
             }
           case 66: break;
           case 25: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [76] { return symbol(sym.GTE); }");
             { return symbol(sym.GTE);
             }
           case 67: break;
           case 26: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [81] { return symbol(sym.OR); }");
             { return symbol(sym.OR);
             }
           case 68: break;
           case 27: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [50] { return symbol(sym.NEW); }");
             { return symbol(sym.NEW);
             }
           case 69: break;
           case 28: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [66] { return symbol(sym.INT); }");
             { return symbol(sym.INT);
             }
           case 70: break;
           case 29: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [125] { // character guaranteed to be 2nd char, of 3"+ZZ_NL+"\t\t\t\t\tCharacter c = yytext().charAt(1);"+ZZ_NL+""+ZZ_NL+"\t\t\t\t\treturn symbol(sym.LITCHAR, c); }");
             { // character guaranteed to be 2nd char, of 3
 					Character c = yytext().charAt(1);
 
@@ -1075,138 +999,59 @@ public class Lexer implements java_cup.runtime.Scanner {
             }
           case 71: break;
           case 30: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [57] { return symbol(sym.NULL); }");
             { return symbol(sym.NULL);
             }
           case 72: break;
           case 31: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [56] { return symbol(sym.ELSE); }");
             { return symbol(sym.ELSE);
             }
           case 73: break;
           case 32: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [104] { return symbol(sym.LITBOOL, Boolean.TRUE); }");
             { return symbol(sym.LITBOOL, Boolean.TRUE);
             }
           case 74: break;
           case 33: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [52] { return symbol(sym.VOID); }");
             { return symbol(sym.VOID);
             }
           case 75: break;
           case 34: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [64] { return symbol(sym.CHAR); }");
             { return symbol(sym.CHAR);
             }
           case 76: break;
           case 35: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [67] { return symbol(sym.LONG); }");
             { return symbol(sym.LONG);
             }
           case 77: break;
           case 36: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [53] { return symbol(sym.CLASS); }");
             { return symbol(sym.CLASS);
             }
           case 78: break;
           case 37: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [58] { return symbol(sym.SUPER); }");
             { return symbol(sym.SUPER);
             }
           case 79: break;
           case 38: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [105] { return symbol(sym.LITBOOL, Boolean.FALSE); }");
             { return symbol(sym.LITBOOL, Boolean.FALSE);
             }
           case 80: break;
           case 39: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [51] { return symbol(sym.RETURN); }");
             { return symbol(sym.RETURN);
             }
           case 81: break;
           case 40: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [65] { return symbol(sym.DOUBLE); }");
             { return symbol(sym.DOUBLE);
             }
           case 82: break;
           case 41: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [54] { return symbol(sym.EXTENDS); }");
             { return symbol(sym.EXTENDS);
             }
           case 83: break;
           case 42: 
-            System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [63] { return symbol(sym.BOOL); }");
             { return symbol(sym.BOOL);
             }
           case 84: break;
           default:
             zzScanError(ZZ_NO_MATCH);
-        }
-      }
-    }
-  }
-
-  /**
-   * Runs the scanner on input files.
-   *
-   * This main method is the debugging routine for the scanner.
-   * It prints debugging information about each returned token to
-   * System.out until the end of file is reached, or an error occured.
-   *
-   * @param argv   the command line, contains the filenames to run
-   *               the scanner on.
-   */
-  public static void main(String argv[]) {
-    if (argv.length == 0) {
-      System.out.println("Usage : java Lexer [ --encoding <name> ] <inputfile(s)>");
-    }
-    else {
-      int firstFilePos = 0;
-      String encodingName = "UTF-8";
-      if (argv[0].equals("--encoding")) {
-        firstFilePos = 2;
-        encodingName = argv[1];
-        try {
-          java.nio.charset.Charset.forName(encodingName); // Side-effect: is encodingName valid? 
-        } catch (Exception e) {
-          System.out.println("Invalid encoding '" + encodingName + "'");
-          return;
-        }
-      }
-      for (int i = firstFilePos; i < argv.length; i++) {
-        Lexer scanner = null;
-        try {
-          java.io.FileInputStream stream = new java.io.FileInputStream(argv[i]);
-          java.io.Reader reader = new java.io.InputStreamReader(stream, encodingName);
-          scanner = new Lexer(reader);
-          do {
-            System.out.println(scanner.next_token());
-          } while (!scanner.zzAtEOF);
-
-        }
-        catch (java.io.FileNotFoundException e) {
-          System.out.println("File not found : \""+argv[i]+"\"");
-        }
-        catch (java.io.IOException e) {
-          System.out.println("IO error scanning file \""+argv[i]+"\"");
-          System.out.println(e);
-        }
-        catch (Exception e) {
-          System.out.println("Unexpected exception:");
-          e.printStackTrace();
         }
       }
     }

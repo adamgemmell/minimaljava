@@ -19,7 +19,7 @@ import java_cup.runtime.*;
 %public
 %yylexthrow UnexpectedCharacterException,NumberFormatException
 %cup
-%debug
+//%debug
 
 // Custom code block
 %{
