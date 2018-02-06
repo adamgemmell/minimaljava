@@ -30,7 +30,7 @@ primtype ::= numtype | BOOL;
 type ::= name | primtype;
 
 //Low-level expressions
-lit ::= LITINT | LITCHAR | LITLONG | LITDOUBLE | LITBOOL;
+lit ::= LITINT | LITCHAR | LITLONG | LITDOUBLE | LITBOOL | NULL;
 infixop ::= PLUS | MINUS | MULT | DIV | MOD
     | GT | GTE | AND | OR | EQ;
 
@@ -99,7 +99,6 @@ fieldassignment ::= name ASSIGN expression;
 ifelse ::= IF BRACKETL expression EQ expression BRACKETR block ELSE block;
 
 expression ::= name
-    | NULL
     | promexpression
     | BRACKETL name BRACKETR expression
     | prim;
