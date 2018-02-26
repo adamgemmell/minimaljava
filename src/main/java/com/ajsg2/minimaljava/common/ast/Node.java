@@ -1,5 +1,6 @@
 package com.ajsg2.minimaljava.common.ast;
 
+import com.ajsg2.minimaljava.common.nonterminals;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,7 +16,11 @@ public class Node {
 		this.nodeId = nodeId;
 		this.type = type;
 		this.value = value;
-		this.children = children;
+		if (children == null) {
+			this.children = new LinkedList<>();
+		} else {
+			this.children = children;
+		}
 	}
 
 	public Node(int nodeId, Object value, List<Node> children) {
@@ -38,14 +43,26 @@ public class Node {
 		if (sb.length() == 0) {
 			// Node is changed, we need to rebuild the string
 			sb.append("( id: ")
-					.append(nodeId)
-					.append(", type: ")
-					.append(type)
-					.append(", value: ")
-					.append(value.toString())
-					.append("\nchildren:\n");
-			for (Node child : children) {
-				sb.append(child.prettyPrint()).append("\n");
+					.append(nonterminals.nonterms[nodeId]);
+
+			if (type != null) {
+				sb.append(", type: ").append(type);
+			}
+			if (value != null) {
+				sb.append(", value: ").append(value.toString());
+			}
+
+			if (children.size() > 0) {
+				sb.append("\nchildren:\n");
+
+				for (Node child : children) {
+					// Indent each child by one
+					if (child != null) {
+						sb.append(child.prettyPrint().replaceAll("(?m)^", "\t")).append("\n");
+					} else {
+						sb.append("\t[null]\n");
+					}
+				}
 			}
 			sb.append(")");
 		}
