@@ -69,7 +69,9 @@ program ::= classdeflist:cdl                  {: RESULT = cdl; :};
 
 // Classes
 classdef ::=  classdecl:cd classbody:cbds     {: List<Node> children = cd.getChildren();
-                                                 children.addAll(cbds);
+                                                 if(cbds != null){
+                                                    children.addAll(cbds);
+                                                 }
                                                  RESULT = new Node(sym.classdef, cd.getValue(), children);
                                               :};
 classdecl ::= CLASS IDENT:classname EXTENDS name:n

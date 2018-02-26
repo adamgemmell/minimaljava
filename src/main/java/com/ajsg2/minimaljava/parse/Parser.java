@@ -722,7 +722,9 @@ class CUP$Parser$actions {
 		int cbdsright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		List<Node> cbds = (List<Node>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 List<Node> children = cd.getChildren();
-                                                 children.addAll(cbds);
+                                                 if(cbds != null){
+                                                    children.addAll(cbds);
+                                                 }
                                                  RESULT = new Node(sym.classdef, cd.getValue(), children);
                                               
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("classdef",10, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -774,7 +776,11 @@ class CUP$Parser$actions {
 		int cbdleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int cbdright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Node cbd = (Node)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 RESULT = new LinkedList<Node>(Arrays.asList(cbd)); 
+		 if(cbd==null)
+                                                    RESULT = new LinkedList<Node>();
+                                                 else
+                                                    RESULT = new LinkedList<Node>(Arrays.asList(cbd));
+                                              
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("classbodydecls",35, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
