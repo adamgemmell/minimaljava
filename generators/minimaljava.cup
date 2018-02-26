@@ -4,35 +4,39 @@ terminal ASSIGN, AND, DIV, EQ, GT, GTE, MINUS, MOD, MULT, NOT, OR, PLUS;
 terminal IDENT, LITINT, LITCHAR, LITLONG, LITDOUBLE, LITBOOL;
 terminal INT, CHAR, LONG, DOUBLE, BOOL;
 
-non terminal lit, numtype, primtype, type, infixop, block, ifelse;
-non terminal program;
-non terminal param, paramlist, paramlistcomma;
-non terminal statement, statementlist, expression, promexpression, prim;
-non terminal fielddef, fieldassignment, localvardef;
+non terminal lit, numtype, primtype, type, infixop, block;
 non terminal name, simplename, qualifiedname;
+
+non terminal program;
 non terminal classdef, classdecl, classbody, classbodydecls, classbodydecl, classdeflist;
 non terminal constructordef, constructordecl, constructorbody;
+non terminal statement, statementlist;
+non terminal param, paramlist, paramlistcomma;
+non terminal arglist;
+non terminal fielddef, localvardef, ifelse;
 non terminal methoddef, methoddecl, methodheader;
+non terminal expression, promexpression, opexpression, castexpression, unaryexpression;
+non terminal varassignment, primary, fieldaccess;
 
-//Precedences
-precedence left PLUS, MINUS;
-precedence left MULT, DIV;
-precedence left MOD;
-precedence left GTE, GT;
-precedence left AND, OR;
+// Precedences
+precedence left OR, AND;
 precedence left EQ;
+precedence left GTE, GT;
+precedence left PLUS, MINUS;
+precedence left MULT, DIV, MOD;
+precedence left NOT;
 
 start with program;
 
-//Simple types
+// Simple types
 numtype ::= INT | CHAR | LONG | DOUBLE;
 primtype ::= numtype | BOOL;
 type ::= name | primtype;
 
-//Low-level expressions
+// Low-level expressions
 lit ::= LITINT | LITCHAR | LITLONG | LITDOUBLE | LITBOOL | NULL;
-infixop ::= PLUS | MINUS | MULT | DIV | MOD
-    | GT | GTE | AND | OR | EQ;
+infixop ::= PLUS | MINUS | MULT | DIV
+    | MOD | GT | GTE | AND | OR | EQ;
 
 // Names
 name ::= simplename | qualifiedname;
@@ -41,7 +45,7 @@ qualifiedname ::= name PERIOD IDENT:id;
 
 program ::= classdeflist;
 
-//Classes
+// Classes
 classdef ::=  classdecl classbody;
 classdecl ::= CLASS IDENT:classname EXTENDS name;
 classbody ::= CURLYBRACEL classbodydecls CURLYBRACER
@@ -53,18 +57,27 @@ classbodydecl ::= fielddef
     | constructordef;
 
 classdeflist ::= classdef
-    | classdef:cd classdeflist:cdl
-    ;
+    | classdef:cd classdeflist:cdl;
 
-//Fields
+// Fields
 fielddef ::= type simplename SEMICOLON;
 localvardef ::= type simplename;
+
+// Parameters
+param ::= type:type IDENT:id;
+paramlist ::= param
+    | param:param paramlistcomma;
+paramlistcomma ::= COMMA paramlist;
+
+// Args
+arglist ::= expression
+    | arglist COMMA expression;
 
 // Constructor
 constructordef ::= constructordecl constructorbody;
 constructordecl ::= IDENT:id BRACKETL paramlist BRACKETR
     | IDENT:id BRACKETL BRACKETR;
-constructorbody ::= CURLYBRACEL SUPER BRACKETL paramlist BRACKETR SEMICOLON CURLYBRACER
+constructorbody ::= CURLYBRACEL SUPER BRACKETL arglist BRACKETR SEMICOLON CURLYBRACER
     | CURLYBRACEL SUPER BRACKETL BRACKETR SEMICOLON CURLYBRACER;
 
 // Method
@@ -77,12 +90,6 @@ methoddecl ::= IDENT:id BRACKETL paramlist BRACKETR
 block ::= CURLYBRACEL CURLYBRACER
     | CURLYBRACEL statementlist CURLYBRACER;
 
-// parameters
-param ::= type:type IDENT:id;
-paramlist ::= param
-    | param:param paramlistcomma;
-paramlistcomma ::= COMMA paramlist;
-
 // Statements
 statementlist ::= statement
     | statement statementlist;
@@ -90,21 +97,32 @@ statement ::= SEMICOLON
     | localvardef SEMICOLON
     | promexpression SEMICOLON
     | ifelse
-    | fieldassignment SEMICOLON
+    | varassignment SEMICOLON
     | RETURN expression SEMICOLON
     | block;
 
-fieldassignment ::= name ASSIGN expression;
+varassignment ::= name ASSIGN expression;
 
 ifelse ::= IF BRACKETL expression EQ expression BRACKETR block ELSE block;
 
-expression ::= name
-    | promexpression
-    | BRACKETL name BRACKETR expression
-    | prim;
+// Simplified version from https://www.cs.cornell.edu/andru/javaspec/19.doc.html
+expression ::= opexpression;
 
-prim ::= lit
-    | name
-    | prim infixop prim
-    | BRACKETL prim BRACKETR
-    | NOT prim;
+opexpression ::= opexpression infixop opexpression
+    | castexpression;
+
+// Whether or not this is a valid cast must be decided later
+// due to LALR(1) limitations
+castexpression ::= BRACKETL expression BRACKETR opexpression
+    | BRACKETL primtype BRACKETR opexpression
+    | unaryexpression;
+
+unaryexpression ::= NOT unaryexpression
+    | primary
+    | name;
+
+primary ::= lit
+    | BRACKETL expression BRACKETR
+    | fieldaccess;
+
+fieldaccess ::= primary PERIOD IDENT;
