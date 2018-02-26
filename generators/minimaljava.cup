@@ -1,22 +1,39 @@
+import com.ajsg2.minimaljava.common.ast.*;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Arrays;
+
+parser code {:
+    // Empty
+:};
+
 terminal BRACKETL, BRACKETR, CURLYBRACEL, CURLYBRACER, SEMICOLON, PERIOD, COMMA;
 terminal CLASS, ELSE, EXTENDS, IF, NEW, NULL, RETURN, VOID, SUPER;
 terminal ASSIGN, AND, DIV, EQ, GT, GTE, MINUS, MOD, MULT, NOT, OR, PLUS;
-terminal IDENT, LITINT, LITCHAR, LITLONG, LITDOUBLE, LITBOOL;
 terminal INT, CHAR, LONG, DOUBLE, BOOL;
+terminal String IDENT;
+terminal int LITINT;
+terminal char LITCHAR;
+terminal long LITLONG;
+terminal double LITDOUBLE;
+terminal boolean LITBOOL;
 
-non terminal lit, numtype, primtype, type, infixop, block;
-non terminal name, simplename, qualifiedname;
+non terminal Node lit, numtype, primtype, type, infixop, block;
+non terminal Node name, simplename, qualifiedname;
 
-non terminal program;
-non terminal classdef, classdecl, classbody, classbodydecls, classbodydecl, classdeflist;
-non terminal constructordef, constructordecl, constructorbody;
-non terminal statement, statementlist;
-non terminal param, paramlist, paramlistcomma;
-non terminal arglist;
-non terminal fielddef, localvardef, ifelse;
-non terminal methoddef, methoddecl, methodheader;
-non terminal expression, promexpression, opexpression, castexpression, unaryexpression;
-non terminal varassignment, primary, fieldaccess;
+non terminal List<Node> program;
+non terminal Node       classdef, classdecl, classbodydecl;
+non terminal List<Node> classbody;
+non terminal Node       constructordef, constructordecl, constructorbody;
+non terminal Node       statement;
+non terminal Node       param, paramlistcomma;
+non terminal Node       fielddef, localvardef, ifelse;
+non terminal Node       methoddef, methoddecl, methodheader;
+non terminal Node       expression, promexpression, opexpression, castexpression, unaryexpression;
+non terminal Node       varassignment, primary, fieldaccess;
+
+// Lists
+non terminal List<Node> classdeflist, classbodydecls, statementlist, paramlist, arglist;
 
 // Precedences
 precedence left OR, AND;
@@ -39,25 +56,39 @@ infixop ::= PLUS | MINUS | MULT | DIV
     | MOD | GT | GTE | AND | OR | EQ;
 
 // Names
-name ::= simplename | qualifiedname;
-simplename ::= IDENT:id;
-qualifiedname ::= name PERIOD IDENT:id;
+name ::= simplename:sn                        {: RESULT = sn; :}
+    | qualifiedname:qn                        {: RESULT = qn; :};
+simplename ::= IDENT:id                       {: List<String> name = new LinkedList<String>(Arrays.asList(id));
+	                                               RESULT = new Node(sym.name, name); :};
+qualifiedname ::= name:n PERIOD IDENT:id      {: List<String> name = (List<String>)n.getValue();
+                                                 name.add(id);
+                                                 RESULT = n;
+                                              :};
 
-program ::= classdeflist;
+program ::= classdeflist:cdl                  {: RESULT = cdl; :};
 
 // Classes
-classdef ::=  classdecl classbody;
-classdecl ::= CLASS IDENT:classname EXTENDS name;
-classbody ::= CURLYBRACEL classbodydecls CURLYBRACER
-    | CURLYBRACEL CURLYBRACER;
-classbodydecls ::= classbodydecl
-    | classbodydecls classbodydecl;
-classbodydecl ::= fielddef
-    | methoddef
-    | constructordef;
+classdef ::=  classdecl:cd classbody:cbds     {: List<Node> children = cd.getChildren();
+                                                 children.addAll(cbds);
+                                                 RESULT = new Node(sym.classdef, cd.getValue(), children);
+                                              :};
+classdecl ::= CLASS IDENT:classname EXTENDS name:n
+                                              {: List<Node> children = new LinkedList<Node>(Arrays.asList(n));
+                                                     RESULT = new Node(sym.classdecl, classname, children);
+                                               :};
+classbody ::= CURLYBRACEL classbodydecls:cbds CURLYBRACER
+                                              {: RESULT = cbds; :}
+    | CURLYBRACEL CURLYBRACER                 {: RESULT = null; :};
 
-classdeflist ::= classdef
-    | classdef:cd classdeflist:cdl;
+classbodydecls ::= classbodydecl:cbd          {: RESULT = new LinkedList<Node>(Arrays.asList(cbd)); :}
+    | classbodydecls:cbds classbodydecl:cbd   {: cbds.add(cbd); :};
+
+classbodydecl ::= fielddef:fd                 {: RESULT = fd; :}
+    | methoddef:md                            {: RESULT = md; :}
+    | constructordef:cd                       {: RESULT = cd; :};
+
+classdeflist ::= classdef:cd                  {: RESULT =new LinkedList<Node>(Arrays.asList(cd)); :}
+    | classdef:cd classdeflist:cdl            {: cdl.add(cd); :};
 
 // Fields
 fielddef ::= type simplename SEMICOLON;
@@ -74,11 +105,20 @@ arglist ::= expression
     | arglist COMMA expression;
 
 // Constructor
-constructordef ::= constructordecl constructorbody;
-constructordecl ::= IDENT:id BRACKETL paramlist BRACKETR
-    | IDENT:id BRACKETL BRACKETR;
-constructorbody ::= CURLYBRACEL SUPER BRACKETL arglist BRACKETR SEMICOLON CURLYBRACER
-    | CURLYBRACEL SUPER BRACKETL BRACKETR SEMICOLON CURLYBRACER;
+constructordef ::= constructordecl:cd constructorbody:cb
+                                            {: List<Node> children = new LinkedList<Node>(Arrays.asList(cb, cd));
+                                               RESULT = new Node(sym.constructordef, cd.getValue(), children ); :};
+constructordecl ::= IDENT:id BRACKETL paramlist:pl BRACKETR
+                                            {: RESULT = new Node(sym.constructordef, id, pl); :}
+    | IDENT:id BRACKETL BRACKETR            {: RESULT = new Node(sym.constructordef, id); :};
+constructorbody ::= CURLYBRACEL SUPER BRACKETL arglist:al BRACKETR SEMICOLON statementlist: sl CURLYBRACER
+                                            {: RESULT = new Node(sym.constructorbody, al, sl); :}
+    | CURLYBRACEL SUPER BRACKETL arglist:al BRACKETR SEMICOLON CURLYBRACER
+                                            {: RESULT = new Node(sym.constructorbody, al, null); :}
+    | CURLYBRACEL SUPER BRACKETL BRACKETR SEMICOLON statementlist: sl CURLYBRACER
+                                            {: RESULT = new Node(sym.constructorbody, null, sl); :}
+    | CURLYBRACEL SUPER BRACKETL BRACKETR SEMICOLON CURLYBRACER
+                                            {: RESULT = new Node(sym.constructorbody, null, null); :};
 
 // Method
 methoddef ::= methodheader block;

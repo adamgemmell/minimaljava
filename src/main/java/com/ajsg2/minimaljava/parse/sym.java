@@ -9,28 +9,28 @@ package com.ajsg2.minimaljava.parse;
 public class sym {
   /* terminals */
   public static final int MULT = 26;
-  public static final int CHAR = 37;
+  public static final int CHAR = 31;
   public static final int BRACKETR = 3;
   public static final int PERIOD = 7;
   public static final int BRACKETL = 2;
-  public static final int DOUBLE = 39;
+  public static final int DOUBLE = 33;
   public static final int CURLYBRACER = 5;
-  public static final int INT = 36;
-  public static final int LITBOOL = 35;
+  public static final int INT = 30;
+  public static final int LITBOOL = 40;
   public static final int CURLYBRACEL = 4;
   public static final int MINUS = 24;
   public static final int NOT = 27;
   public static final int SEMICOLON = 6;
   public static final int AND = 19;
   public static final int OR = 28;
-  public static final int BOOL = 40;
+  public static final int BOOL = 34;
   public static final int COMMA = 8;
   public static final int CLASS = 9;
   public static final int DIV = 20;
   public static final int PLUS = 29;
   public static final int ASSIGN = 18;
   public static final int IF = 12;
-  public static final int LITDOUBLE = 34;
+  public static final int LITDOUBLE = 39;
   public static final int EOF = 0;
   public static final int RETURN = 15;
   public static final int SUPER = 17;
@@ -38,17 +38,17 @@ public class sym {
   public static final int error = 1;
   public static final int NULL = 14;
   public static final int MOD = 25;
-  public static final int IDENT = 30;
+  public static final int IDENT = 35;
   public static final int VOID = 16;
   public static final int EQ = 21;
   public static final int GTE = 23;
   public static final int ELSE = 10;
-  public static final int LITLONG = 33;
+  public static final int LITLONG = 38;
   public static final int EXTENDS = 11;
-  public static final int LONG = 38;
-  public static final int LITINT = 31;
+  public static final int LONG = 32;
+  public static final int LITINT = 36;
   public static final int GT = 22;
-  public static final int LITCHAR = 32;
+  public static final int LITCHAR = 37;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -80,56 +80,56 @@ public class sym {
   "NOT",
   "OR",
   "PLUS",
+  "INT",
+  "CHAR",
+  "LONG",
+  "DOUBLE",
+  "BOOL",
   "IDENT",
   "LITINT",
   "LITCHAR",
   "LITLONG",
   "LITDOUBLE",
-  "LITBOOL",
-  "INT",
-  "CHAR",
-  "LONG",
-  "DOUBLE",
-  "BOOL"
+  "LITBOOL"
   };
 
   /* non terminals */
   static final int program = 9;
   static final int lit = 0;
   static final int qualifiedname = 8;
-  static final int varassignment = 36;
-  static final int param = 21;
-  static final int classbodydecl = 14;
-  static final int opexpression = 33;
+  static final int varassignment = 31;
+  static final int param = 18;
+  static final int classbodydecl = 12;
+  static final int opexpression = 28;
   static final int classdef = 10;
-  static final int classbody = 12;
-  static final int constructordef = 16;
+  static final int classbody = 13;
+  static final int constructordef = 14;
   static final int block = 5;
-  static final int paramlist = 22;
-  static final int fielddef = 25;
-  static final int fieldaccess = 38;
-  static final int methodheader = 30;
+  static final int paramlist = 37;
+  static final int fielddef = 20;
+  static final int fieldaccess = 33;
+  static final int methodheader = 25;
   static final int name = 6;
-  static final int castexpression = 34;
-  static final int arglist = 24;
-  static final int constructorbody = 18;
-  static final int methoddef = 28;
-  static final int primary = 37;
+  static final int castexpression = 29;
+  static final int arglist = 38;
+  static final int constructorbody = 16;
+  static final int methoddef = 23;
   static final int primtype = 2;
-  static final int promexpression = 32;
-  static final int expression = 31;
-  static final int statement = 19;
-  static final int unaryexpression = 35;
-  static final int classdeflist = 15;
-  static final int classbodydecls = 13;
-  static final int ifelse = 27;
+  static final int primary = 32;
+  static final int promexpression = 27;
+  static final int expression = 26;
+  static final int statement = 17;
+  static final int unaryexpression = 30;
+  static final int classdeflist = 34;
+  static final int classbodydecls = 35;
+  static final int ifelse = 22;
   static final int classdecl = 11;
-  static final int paramlistcomma = 23;
-  static final int constructordecl = 17;
-  static final int localvardef = 26;
+  static final int paramlistcomma = 19;
+  static final int constructordecl = 15;
+  static final int localvardef = 21;
   static final int simplename = 7;
-  static final int methoddecl = 29;
-  static final int statementlist = 20;
+  static final int statementlist = 36;
+  static final int methoddecl = 24;
   static final int numtype = 1;
   static final int infixop = 4;
   static final int type = 3;
