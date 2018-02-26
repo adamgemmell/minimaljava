@@ -53,7 +53,7 @@ public class Node {
 			}
 
 			if (children.size() > 0) {
-				sb.append("\nchildren:\n");
+				sb.append("\n\tchildren:\n");
 
 				for (Node child : children) {
 					// Indent each child by one
