@@ -11,3 +11,5 @@ libraryDependencies += "com.typesafe.scala-logging" % "scala-logging_2.12" % "3.
 // https://mvnrepository.com/artifact/com.github.vbmacher/java-cup-runtime
 libraryDependencies += "com.github.vbmacher" % "java-cup-runtime" % "11b"
 
+// https://mvnrepository.com/artifact/org.javassist/javassist
+libraryDependencies += "org.javassist" % "javassist" % "3.22.0-GA"

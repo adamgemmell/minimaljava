@@ -1,13 +1,12 @@
-class TestClass extends Object {
-    TestClass(){
-          super();
+class TestClass extends java.OtherClass {
+    int y;
+
+    TestClass(int x){
+        super();
+        y = x;
     }
 
-    void wow(int a, char b){
-        if(x == null){
-            return 0;
-        } else {
-            return x+3;
-        }
+    int wow(){
+        return y+1;
     }
 }
