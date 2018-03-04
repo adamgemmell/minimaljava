@@ -1,12 +1,11 @@
-class TestClass extends java.OtherClass {
-    int y;
+class TestClass extends xd.wow.Object {
+    //int y;
 
-    TestClass(int x){
+    TestClass(){
         super();
-        y = x;
     }
 
-    int wow(){
-        return y+1;
-    }
+    //int wow(){
+    //    return y+1;
+    //}
 }
