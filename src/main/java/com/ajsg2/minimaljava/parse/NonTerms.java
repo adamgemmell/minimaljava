@@ -1,6 +1,4 @@
-package com.ajsg2.minimaljava.common;
-
-import com.ajsg2.minimaljava.parse.sym;
+package com.ajsg2.minimaljava.parse;
 
 public class NonTerms {
 
@@ -15,161 +13,43 @@ public class NonTerms {
 			"varassignment", "primary", "fieldaccess", "classdeflist",
 			"classbodydecls", "statementlist", "paramlist", "arglist"
 	};
-
-
-	public static int getProgram() {
-		return sym.program;
-	}
-
-	public static int getLit() {
-		return sym.lit;
-	}
-
-	public static int getQualifiedname() {
-		return sym.qualifiedname;
-	}
-
-	public static int getVarassignment() {
-		return sym.varassignment;
-	}
-
-	public static int getParam() {
-		return sym.param;
-	}
-
-	public static int getClassbodydecl() {
-		return sym.classbodydecl;
-	}
-
-	public static int getOpexpression() {
-		return sym.opexpression;
-	}
-
-	public static int getClassdef() {
-		return sym.classdef;
-	}
-
-	public static int getClassbody() {
-		return sym.classbody;
-	}
-
-	public static int getConstructordef() {
-		return sym.constructordef;
-	}
-
-	public static int getBlock() {
-		return sym.block;
-	}
-
-	public static int getParamlist() {
-		return sym.paramlist;
-	}
-
-	public static int getFielddef() {
-		return sym.fielddef;
-	}
-
-	public static int getFieldaccess() {
-		return sym.fieldaccess;
-	}
-
-	public static int getMethodheader() {
-		return sym.methodheader;
-	}
-
-	public static int getName() {
-		return sym.name;
-	}
-
-	public static int getCastexpression() {
-		return sym.castexpression;
-	}
-
-	public static int getArglist() {
-		return sym.arglist;
-	}
-
-	public static int getConstructorbody() {
-		return sym.constructorbody;
-	}
-
-	public static int getMethoddef() {
-		return sym.methoddef;
-	}
-
-	public static int getPrimtype() {
-		return sym.primtype;
-	}
-
-	public static int getPrimary() {
-		return sym.primary;
-	}
-
-	public static int getPromexpression() {
-		return sym.promexpression;
-	}
-
-	public static int getExpression() {
-		return sym.expression;
-	}
-
-	public static int getStatement() {
-		return sym.statement;
-	}
-
-	public static int getUnaryexpression() {
-		return sym.unaryexpression;
-	}
-
-	public static int getClassdeflist() {
-		return sym.classdeflist;
-	}
-
-	public static int getClassbodydecls() {
-		return sym.classbodydecls;
-	}
-
-	public static int getIfelse() {
-		return sym.ifelse;
-	}
-
-	public static int getClassdecl() {
-		return sym.classdecl;
-	}
-
-	public static int getParamlistcomma() {
-		return sym.paramlistcomma;
-	}
-
-	public static int getConstructordecl() {
-		return sym.constructordecl;
-	}
-
-	public static int getLocalvardef() {
-		return sym.localvardef;
-	}
-
-	public static int getSimplename() {
-		return sym.simplename;
-	}
-
-	public static int getStatementlist() {
-		return sym.statementlist;
-	}
-
-	public static int getMethoddecl() {
-		return sym.methoddecl;
-	}
-
-	public static int getNumtype() {
-		return sym.numtype;
-	}
-
-	public static int getInfixop() {
-		return sym.infixop;
-	}
-
-	public static int getType() {
-		return sym.type;
-	}
+	public static final int program = sym.program;
+	public static final int lint = sym.lit;
+	public static final int qualifiedname = sym.qualifiedname;
+	public static final int varassignment = sym.varassignment;
+	public static final int param = sym.param;
+	public static final int classbodydecl = sym.classbodydecl;
+	public static final int opexpression = sym.opexpression;
+	public static final int classdef = sym.classdef;
+	public static final int classbody = sym.classbody;
+	public static final int constructordef = sym.constructordef;
+	public static final int block = sym.block;
+	public static final int paramlist = sym.paramlist;
+	public static final int fielddef = sym.fielddef;
+	public static final int fieldaccess = sym.fieldaccess;
+	public static final int methodheader = sym.methodheader;
+	public static final int name = sym.name;
+	public static final int castexpression = sym.castexpression;
+	public static final int arglist = sym.arglist;
+	public static final int constructorbody = sym.constructorbody;
+	public static final int methoddef = sym.methoddef;
+	public static final int primtype = sym.primtype;
+	public static final int primary = sym.primary;
+	public static final int promexpression = sym.promexpression;
+	public static final int expression = sym.expression;
+	public static final int statement = sym.statement;
+	public static final int unaryexpression = sym.unaryexpression;
+	public static final int classdeflist = sym.classdeflist;
+	public static final int classbodydecls = sym.classbodydecls;
+	public static final int ifelse = sym.ifelse;
+	public static final int classdecl = sym.classdecl;
+	public static final int paramlistcomma = sym.paramlistcomma;
+	public static final int constructordecl = sym.constructordecl;
+	public static final int localvardef = sym.localvardef;
+	public static final int simplename = sym.simplename;
+	public static final int statementlist = sym.statementlist;
+	public static final int methoddecl = sym.methoddecl;
+	public static final int numtype = sym.numtype;
+	public static final int infixop = sym.infixop;
+	public static final int type = sym.type;
 }

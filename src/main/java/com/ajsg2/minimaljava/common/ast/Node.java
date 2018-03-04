@@ -1,6 +1,6 @@
 package com.ajsg2.minimaljava.common.ast;
 
-import com.ajsg2.minimaljava.common.nonterminals;
+import com.ajsg2.minimaljava.parse.NonTerms;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,14 +8,14 @@ public class Node {
 
 	private final int nodeId;
 	private String type;
-	private Object value;
+	private Object auxData;
 	private List<Node> children;
 	private StringBuilder sb = new StringBuilder();
 
-	public Node(int nodeId, String type, Object value, List<Node> children) {
+	public Node(int nodeId, String type, Object auxData, List<Node> children) {
 		this.nodeId = nodeId;
 		this.type = type;
-		this.value = value;
+		this.auxData = auxData;
 		if (children == null) {
 			this.children = new LinkedList<>();
 		} else {
@@ -23,12 +23,12 @@ public class Node {
 		}
 	}
 
-	public Node(int nodeId, Object value, List<Node> children) {
-		this(nodeId, null, value, children);
+	public Node(int nodeId, Object auxData, List<Node> children) {
+		this(nodeId, null, auxData, children);
 	}
 
-	public Node(int nodeId, Object value) {
-		this(nodeId, null, value, new LinkedList<>());
+	public Node(int nodeId, Object auxData) {
+		this(nodeId, null, auxData, new LinkedList<>());
 	}
 
 	public Node(int nodeId, List<Node> children) {
@@ -43,13 +43,13 @@ public class Node {
 		if (sb.length() == 0) {
 			// Node is changed, we need to rebuild the string
 			sb.append("( id: ")
-					.append(nonterminals.nonterms[nodeId]);
+					.append(NonTerms.ID[nodeId]);
 
 			if (type != null) {
 				sb.append(", type: ").append(type);
 			}
-			if (value != null) {
-				sb.append(", value: ").append(value.toString());
+			if (auxData != null) {
+				sb.append(", data: ").append(auxData.toString());
 			}
 
 			if (children.size() > 0) {
@@ -92,11 +92,11 @@ public class Node {
 		return children;
 	}
 
-	public Object getValue() {
-		return value;
+	public Object getData() {
+		return auxData;
 	}
 
-	public void setValue(Object value) {
-		this.value = value;
+	public void setData(Object data) {
+		this.auxData = data;
 	}
 }

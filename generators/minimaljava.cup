@@ -48,7 +48,8 @@ start with program;
 // Simple types
 numtype ::= INT | CHAR | LONG | DOUBLE;
 primtype ::= numtype | BOOL;
-type ::= name | primtype;
+type ::= name:n                               {: RESULT = n; :}
+    | primtype:pt                             {: RESULT = pt; :};
 
 // Low-level expressions
 lit ::= LITINT | LITCHAR | LITLONG | LITDOUBLE | LITBOOL | NULL;
@@ -60,7 +61,7 @@ name ::= simplename:sn                        {: RESULT = sn; :}
     | qualifiedname:qn                        {: RESULT = qn; :};
 simplename ::= IDENT:id                       {: List<String> name = new LinkedList<String>(Arrays.asList(id));
 	                                               RESULT = new Node(sym.name, name); :};
-qualifiedname ::= name:n PERIOD IDENT:id      {: List<String> name = (List<String>)n.getValue();
+qualifiedname ::= name:n PERIOD IDENT:id      {: List<String> name = (List<String>)n.getData();
                                                  name.add(id);
                                                  RESULT = n;
                                               :};
@@ -72,7 +73,7 @@ classdef ::=  classdecl:cd classbody:cbds     {: List<Node> children = cd.getChi
                                                  if(cbds != null){
                                                     children.addAll(cbds);
                                                  }
-                                                 RESULT = new Node(sym.classdef, cd.getValue(), children);
+                                                 RESULT = new Node(sym.classdef, cd.getData(), children);
                                               :};
 classdecl ::= CLASS IDENT:classname EXTENDS name:n
                                               {: List<Node> children = new LinkedList<Node>(Arrays.asList(n));
@@ -109,7 +110,7 @@ arglist ::= expression
 // Constructor
 constructordef ::= constructordecl:cd constructorbody:cb
                                             {: List<Node> children = new LinkedList<Node>(Arrays.asList(cb, cd));
-                                               RESULT = new Node(sym.constructordef, cd.getValue(), children ); :};
+                                               RESULT = new Node(sym.constructordef, cd.getData(), children ); :};
 constructordecl ::= IDENT:id BRACKETL paramlist:pl BRACKETR
                                             {: RESULT = new Node(sym.constructordef, id, pl); :}
     | IDENT:id BRACKETL BRACKETR            {: RESULT = new Node(sym.constructordef, id); :};
