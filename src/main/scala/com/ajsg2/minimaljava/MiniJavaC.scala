@@ -1,5 +1,6 @@
 package com.ajsg2.minimaljava
 
+import com.ajsg2.minimaljava.codegen.ClassGenerator
 import com.ajsg2.minimaljava.common.ast.Node
 import com.ajsg2.minimaljava.lex.Lexer
 import com.ajsg2.minimaljava.parse.Parser
@@ -20,8 +21,12 @@ object MiniJavaC {
 
 		args.foreach(a =>
 			if (a.charAt(0) != '-') {
-				fileName = Some(a)
-				logger.debug("Filename: " + a)
+				if (a.endsWith(".mj")) {
+					fileName = Some(a.dropRight(3))
+				} else {
+					fileName = Some(a)
+				}
+				logger.debug("Filename: " + fileName.get)
 			} else if (a.equals("-interactive")) {
 				interactive = true
 				logger.debug("Using interactive mode")
@@ -36,7 +41,7 @@ object MiniJavaC {
 			if (interactive) {
 				new BufferedReader(new InputStreamReader(System.in))
 			} else {
-				new BufferedReader(new FileReader(fileName.get))
+				new BufferedReader(new FileReader(fileName.get.concat(".mj")))
 			}
 
 		//Debug test
@@ -45,19 +50,13 @@ object MiniJavaC {
 
 		ast.foreach(x => println(x.prettyPrint))
 
-		/* Lexer only
-		val lexer = new Lexer(reader)
-		var token: Token = null
+		ast.foreach(x => generate(x))
+	}
 
-		do {
-			try {
-				token = lexer.yylex()
-				println(token)
-			} catch {
-				case e: UnexpectedCharacterException => logger.error(e.getMessage)
-				case e: NumberFormatException => logger.error(e.getMessage)
-				case e: Exception => logger.error(e.getMessage)
-			}
-		} while (token != null)*/
+	private def generate(node: Node): Unit = {
+		val os = new BufferedOutputStream(
+			new FileOutputStream(node.getData.asInstanceOf[String].concat(".class")))
+		val cg = new ClassGenerator(os, node)
+		cg.generate()
 	}
 }
