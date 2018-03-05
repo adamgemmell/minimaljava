@@ -956,7 +956,8 @@ class CUP$Parser$actions {
 		int cbleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int cbright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Node cb = (Node)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 List<Node> children = new LinkedList<Node>(Arrays.asList(cb, cd));
+		 List<Node> children = cd.getChildren();
+                                               children.add(cb);
                                                RESULT = new Node(sym.constructordef, cd.getData(), children ); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("constructordef",14, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -972,7 +973,7 @@ class CUP$Parser$actions {
 		int plleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
 		int plright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		List<Node> pl = (List<Node>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
-		 RESULT = new Node(sym.constructordef, id, pl); 
+		 RESULT = new Node(sym.constructordecl, id, pl); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("constructordecl",15, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -984,7 +985,7 @@ class CUP$Parser$actions {
 		int idleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
 		int idright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).right;
 		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
-		 RESULT = new Node(sym.constructordef, id); 
+		 RESULT = new Node(sym.constructordecl, id); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("constructordecl",15, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

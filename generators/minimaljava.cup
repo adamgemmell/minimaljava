@@ -109,11 +109,12 @@ arglist ::= expression
 
 // Constructor
 constructordef ::= constructordecl:cd constructorbody:cb
-                                            {: List<Node> children = new LinkedList<Node>(Arrays.asList(cb, cd));
+                                            {: List<Node> children = cd.getChildren();
+                                               children.add(cb);
                                                RESULT = new Node(sym.constructordef, cd.getData(), children ); :};
 constructordecl ::= IDENT:id BRACKETL paramlist:pl BRACKETR
-                                            {: RESULT = new Node(sym.constructordef, id, pl); :}
-    | IDENT:id BRACKETL BRACKETR            {: RESULT = new Node(sym.constructordef, id); :};
+                                            {: RESULT = new Node(sym.constructordecl, id, pl); :}
+    | IDENT:id BRACKETL BRACKETR            {: RESULT = new Node(sym.constructordecl, id); :};
 constructorbody ::= CURLYBRACEL SUPER BRACKETL arglist:al BRACKETR SEMICOLON statementlist: sl CURLYBRACER
                                             {: RESULT = new Node(sym.constructorbody, al, sl); :}
     | CURLYBRACEL SUPER BRACKETL arglist:al BRACKETR SEMICOLON CURLYBRACER
