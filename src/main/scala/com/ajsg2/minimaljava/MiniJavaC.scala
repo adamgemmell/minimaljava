@@ -10,6 +10,8 @@ import scala.collection.JavaConverters._
 
 object MiniJavaC {
 
+	var dir: Option[String] = None
+
 	def main(args: Array[String]): Unit = {
 
 		val logger = Logger(this.getClass.getName)
@@ -26,6 +28,7 @@ object MiniJavaC {
 				} else {
 					fileName = Some(a)
 				}
+				dir = Some(fileName.get.split("/").dropRight(1).mkString("/").concat("/"))
 				logger.debug("Filename: " + fileName.get)
 			} else if (a.equals("-interactive")) {
 				interactive = true
@@ -54,8 +57,10 @@ object MiniJavaC {
 	}
 
 	private def generate(node: Node): Unit = {
+		// File path = dir + class name + ".class"
 		val os = new BufferedOutputStream(
-			new FileOutputStream(node.getData.asInstanceOf[String].concat(".class")))
+			new FileOutputStream(
+				dir.get.concat(node.getData.asInstanceOf[String]).concat(".class")))
 		val cg = new ClassGenerator(os, node)
 		cg.generate()
 	}
