@@ -2,6 +2,7 @@ import com.ajsg2.minimaljava.common.ast.*;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Arrays;
+import java.util.Collections;
 
 parser code {:
     // Empty
@@ -11,6 +12,7 @@ terminal BRACKETL, BRACKETR, CURLYBRACEL, CURLYBRACER, SEMICOLON, PERIOD, COMMA;
 terminal CLASS, ELSE, EXTENDS, IF, NEW, NULL, RETURN, VOID, SUPER;
 terminal ASSIGN, AND, DIV, EQ, GT, GTE, MINUS, MOD, MULT, NOT, OR, PLUS;
 terminal INT, CHAR, LONG, DOUBLE, BOOL;
+terminal MAIN;
 terminal String IDENT;
 terminal int LITINT;
 terminal char LITCHAR;
@@ -18,7 +20,7 @@ terminal long LITLONG;
 terminal double LITDOUBLE;
 terminal boolean LITBOOL;
 
-non terminal Node lit, numtype, primtype, type, infixop, block;
+non terminal Node lit, numtype, primtype, type, classtype, infixop, block;
 non terminal Node name, simplename, qualifiedname;
 
 non terminal List<Node> program;
@@ -26,14 +28,16 @@ non terminal Node       classdef, classdecl, classbodydecl;
 non terminal List<Node> classbody;
 non terminal Node       constructordef, constructordecl, constructorbody;
 non terminal Node       statement;
-non terminal Node       param, paramlistcomma;
+non terminal Node       param;
 non terminal Node       fielddef, localvardef, ifelse;
 non terminal Node       methoddef, methoddecl, methodheader;
 non terminal Node       expression, promexpression, opexpression, castexpression, unaryexpression;
 non terminal Node       varassignment, primary, fieldaccess;
+non terminal Node       methodinv;
+non terminal Node       objcreat;
 
 // Lists
-non terminal List<Node> classdeflist, classbodydecls, statementlist, paramlist, arglist;
+non terminal List<Node> classdeflist, classbodydecls, statementlist, paramlist, paramlistcomma, arglist, methodsig;
 
 // Precedences
 precedence left OR, AND;
@@ -46,127 +50,165 @@ precedence left NOT;
 start with program;
 
 // Simple types
-numtype ::= INT | CHAR | LONG | DOUBLE;
-primtype ::= numtype | BOOL;
-type ::= name:n                               {: RESULT = n; :}
+numtype ::= INT                               {: RESULT = new Node(NodeType.type, Integer.TYPE, null, null); :}
+    | CHAR                                    {: RESULT = new Node(NodeType.type, Character.TYPE, null, null); :}
+    | LONG                                    {: RESULT = new Node(NodeType.type, Long.TYPE, null, null); :}
+    | DOUBLE                                  {: RESULT = new Node(NodeType.type, Double.TYPE, null, null); :};
+primtype ::= numtype:n                        {: RESULT = n; :}
+    | BOOL                                    {: RESULT = new Node(NodeType.type, Boolean.TYPE, null, null); :};
+type ::= name:n                               {: RESULT = new Node(NodeType.arbtype, n); :}
     | primtype:pt                             {: RESULT = pt; :};
 
 // Low-level expressions
-lit ::= LITINT | LITCHAR | LITLONG | LITDOUBLE | LITBOOL | NULL;
-infixop ::= PLUS | MINUS | MULT | DIV
-    | MOD | GT | GTE | AND | OR | EQ;
+lit ::= LITINT:l                              {: RESULT = new Node(NodeType.lit, Integer.TYPE, l, null); :}
+    | LITCHAR:l                               {: RESULT = new Node(NodeType.lit, Character.TYPE, l, null); :}
+    | LITLONG:l                               {: RESULT = new Node(NodeType.lit, Long.TYPE, l, null); :}
+    | LITDOUBLE:l                             {: RESULT = new Node(NodeType.lit, Double.TYPE, l, null); :}
+    | LITBOOL:l                               {: RESULT = new Node(NodeType.lit, Boolean.TYPE, l, null); :}
+    | NULL                                    {: RESULT = new Node(NodeType.lit); :};
+infixop ::= PLUS                              {: RESULT = new Node(NodeType.plus); :}
+    | MINUS                                   {: RESULT = new Node(NodeType.minus); :}
+    | MULT                                    {: RESULT = new Node(NodeType.mult); :}
+    | DIV                                     {: RESULT = new Node(NodeType.div); :}
+    | MOD                                     {: RESULT = new Node(NodeType.mod); :}
+    | GT                                      {: RESULT = new Node(NodeType.gt); :}
+    | GTE                                     {: RESULT = new Node(NodeType.gte); :}
+    | AND                                     {: RESULT = new Node(NodeType.and); :}
+    | OR                                      {: RESULT = new Node(NodeType.or); :}
+    | EQ                                      {: RESULT = new Node(NodeType.eq); :};
 
 // Names
 name ::= simplename:sn                        {: RESULT = sn; :}
     | qualifiedname:qn                        {: RESULT = qn; :};
 simplename ::= IDENT:id                       {: List<String> name = new LinkedList<String>(Arrays.asList(id));
-	                                               RESULT = new Node(sym.name, name); :};
+	                                               RESULT = new Node(NodeType.name, name); :};
 qualifiedname ::= name:n PERIOD IDENT:id      {: List<String> name = (List<String>)n.getData();
                                                  name.add(id);
                                                  RESULT = n;
                                               :};
 
+classtype ::= name:n                          {: RESULT = new Node(NodeType.classtype, n); :};
+
 program ::= classdeflist:cdl                  {: RESULT = cdl; :};
 
 // Classes
 classdef ::=  classdecl:cd classbody:cbds     {: List<Node> children = cd.getChildren();
-                                                 if(cbds != null){
-                                                    children.addAll(cbds);
-                                                 }
-                                                 RESULT = new Node(sym.classdef, cd.getData(), children);
+                                                 children.addAll(cbds);
+                                                 RESULT = new Node(NodeType.classdef, cd.getData(), children);
                                               :};
 classdecl ::= CLASS IDENT:classname EXTENDS name:n
-                                              {: List<Node> children = new LinkedList<Node>(Arrays.asList(n));
-                                                     RESULT = new Node(sym.classdecl, classname, children);
-                                               :};
+                                              {: RESULT = new Node(NodeType.classdecl, classname, n); :};
 classbody ::= CURLYBRACEL classbodydecls:cbds CURLYBRACER
                                               {: RESULT = cbds; :}
-    | CURLYBRACEL CURLYBRACER                 {: RESULT = null; :};
+    | CURLYBRACEL CURLYBRACER                 {: RESULT = new LinkedList<>(); :};
 
-classbodydecls ::= classbodydecl:cbd          {: RESULT = new LinkedList<Node>(Arrays.asList(cbd)); :}
-    | classbodydecls:cbds classbodydecl:cbd   {: cbds.add(cbd); :};
+classbodydecls ::= classbodydecl:cbd          {: RESULT = new LinkedList<>(Arrays.asList(cbd)); :}
+    | classbodydecls:cbds classbodydecl:cbd   {: cbds.add(cbd);
+                                                 RESULT = cbds; :};
 
 classbodydecl ::= fielddef:fd                 {: RESULT = fd; :}
     | methoddef:md                            {: RESULT = md; :}
     | constructordef:cd                       {: RESULT = cd; :};
 
-classdeflist ::= classdef:cd                  {: RESULT =new LinkedList<Node>(Arrays.asList(cd)); :}
-    | classdef:cd classdeflist:cdl            {: cdl.add(cd); :};
+classdeflist ::= classdef:cd                  {: RESULT = new LinkedList<>(Arrays.asList(cd)); :}
+    | classdef:cd classdeflist:cdl            {: cdl.add(cd);
+                                                 RESULT = cdl; :};
 
 // Fields
-fielddef ::= type simplename SEMICOLON;
-localvardef ::= type simplename;
+fielddef ::= type:t simplename:n SEMICOLON      {: RESULT = new Node(NodeType.fielddef, n, t); :};
+localvardef ::= type:t simplename:n             {: RESULT = new Node(NodeType.localvardef, n, t); :};
 
 // Parameters
-param ::= type:type IDENT:id;
-paramlist ::= param
-    | param:param paramlistcomma;
-paramlistcomma ::= COMMA paramlist;
+param ::= type:type IDENT:id                  {: Node result = new Node(NodeType.param, id, type); :};
+paramlist ::= param:p                         {: RESULT = new LinkedList<>(Arrays.asList(p)); :}
+    | param:p paramlistcomma:pl               {: pl.add(p);
+                                                 RESULT = pl; :};
+paramlistcomma ::= COMMA paramlist:pl         {: RESULT = pl; :};
 
 // Args
-arglist ::= expression
-    | arglist COMMA expression;
+arglist ::= expression:e                      {: RESULT = new LinkedList<>(Arrays.asList(e)); :}
+    | arglist:al COMMA expression:e           {: al.add(e);
+                                                 RESULT = al; :};
 
 // Constructor
 constructordef ::= constructordecl:cd constructorbody:cb
                                             {: List<Node> children = cd.getChildren();
                                                children.add(cb);
-                                               RESULT = new Node(sym.constructordef, cd.getData(), children ); :};
+                                               RESULT = new Node(NodeType.constructordef, cd.getData(), children ); :};
 constructordecl ::= IDENT:id BRACKETL paramlist:pl BRACKETR
-                                            {: RESULT = new Node(sym.constructordecl, id, pl); :}
-    | IDENT:id BRACKETL BRACKETR            {: RESULT = new Node(sym.constructordecl, id); :};
+                                            {: RESULT = new Node(NodeType.constructordecl, id, pl); :}
+    | IDENT:id BRACKETL BRACKETR            {: RESULT = new Node(NodeType.constructordecl, id); :};
 constructorbody ::= CURLYBRACEL SUPER BRACKETL arglist:al BRACKETR SEMICOLON statementlist: sl CURLYBRACER
-                                            {: RESULT = new Node(sym.constructorbody, al, sl); :}
+                                            {: RESULT = new Node(NodeType.constructorbody, al, sl); :}
     | CURLYBRACEL SUPER BRACKETL arglist:al BRACKETR SEMICOLON CURLYBRACER
-                                            {: RESULT = new Node(sym.constructorbody, al, null); :}
+                                            {: RESULT = new Node(NodeType.constructorbody, al); :}
     | CURLYBRACEL SUPER BRACKETL BRACKETR SEMICOLON statementlist: sl CURLYBRACER
-                                            {: RESULT = new Node(sym.constructorbody, null, sl); :}
+                                            {: RESULT = new Node(NodeType.constructorbody, sl); :}
     | CURLYBRACEL SUPER BRACKETL BRACKETR SEMICOLON CURLYBRACER
-                                            {: RESULT = new Node(sym.constructorbody, null, null); :};
+                                            {: RESULT = new Node(NodeType.constructorbody); :};
 
 // Method
-methoddef ::= methodheader block;
+methoddef ::= methodheader:mh block:b       {: mh.getChildren().add(b);
+                                               RESULT = mh; :};
 methodheader ::= type:type methoddecl
-    | VOID methoddecl;
+    | VOID methoddecl
+    | MAIN                                  {: RESULT = new Node(NodeType.main); :};
 methoddecl ::= IDENT:id BRACKETL paramlist BRACKETR
     | IDENT:id BRACKETL BRACKETR;
 
-block ::= CURLYBRACEL CURLYBRACER
-    | CURLYBRACEL statementlist CURLYBRACER;
+block ::= CURLYBRACEL CURLYBRACER               {: RESULT = new Node(NodeType.block); :}
+    | CURLYBRACEL statementlist:sl CURLYBRACER  {: RESULT = new Node(NodeType.block, sl); :};
 
 // Statements
-statementlist ::= statement
-    | statement statementlist;
+statementlist ::= statement:s               {: RESULT = new LinkedList<>(Arrays.asList(s)); :}
+    | statement:s statementlist:sl          {: sl.add(s);
+                                               RESULT = sl; :};
 statement ::= SEMICOLON
-    | localvardef SEMICOLON
-    | promexpression SEMICOLON
+    | localvardef:lvd SEMICOLON             {: RESULT = lvd; :}
+    | promexpression:pe SEMICOLON           {: RESULT = pe; :}
     | ifelse
-    | varassignment SEMICOLON
+    | varassignment:va SEMICOLON            {: RESULT = va; :}
     | RETURN expression SEMICOLON
     | block;
 
-varassignment ::= name ASSIGN expression;
+varassignment ::= name:n ASSIGN expression:e  {: RESULT = new Node(NodeType.varassignment, n, e); :};
 
 ifelse ::= IF BRACKETL expression EQ expression BRACKETR block ELSE block;
 
 // Simplified version from https://www.cs.cornell.edu/andru/javaspec/19.doc.html
-expression ::= opexpression;
+expression ::= opexpression:o                   {: RESULT = o; :};
 
 opexpression ::= opexpression infixop opexpression
-    | castexpression;
+    | castexpression:c                          {: RESULT = c; :};
 
 // Whether or not this is a valid cast must be decided later
 // due to LALR(1) limitations
 castexpression ::= BRACKETL expression BRACKETR opexpression
     | BRACKETL primtype BRACKETR opexpression
-    | unaryexpression;
+    | unaryexpression:u                         {: RESULT = u; :};
 
-unaryexpression ::= NOT unaryexpression
-    | primary
-    | name;
+unaryexpression ::= NOT unaryexpression:u       {: RESULT = new Node(NodeType.not, u); :}
+    | primary:p                                 {: RESULT = p; :}
+    | name:n                                    {: RESULT = n; :};
 
-primary ::= lit
-    | BRACKETL expression BRACKETR
-    | fieldaccess;
+primary ::= lit:l                               {: RESULT = l; :}
+    | BRACKETL expression:e BRACKETR            {: RESULT = new Node(NodeType.paren, e); :}
+    | fieldaccess:fe                            {: RESULT = fe; :};
 
-fieldaccess ::= primary PERIOD IDENT;
+fieldaccess ::= primary:p PERIOD IDENT:id       {: RESULT = new Node(NodeType.fieldaccess, id, p); :};
+
+promexpression ::= methodinv:mi                 {: RESULT = mi; :}
+    | objcreat:oc                               {: RESULT = oc; :};
+
+methodinv ::= name:n methodsig:ms               {: RESULT = new Node(NodeType.methodinv, n.getData(), ms); :}
+    | primary:p IDENT:id methodsig:ms           {: List<Node> children = Arrays.asList(p);
+                                                   if(ms != null){
+                                                      children.addAll(ms);
+                                                   }
+                                                   RESULT = new Node(NodeType.methodinv, id, children);
+                                                :};
+methodsig ::= BRACKETL arglist:args BRACKETR    {: RESULT = args; :}
+    | BRACKETL BRACKETR                {: RESULT = null; :};
+
+objcreat ::= NEW classtype:ct BRACKETL arglist:args BRACKETR  {: RESULT = new Node(NodeType.objcreat, ct, args); :}
+    | NEW classtype:ct BRACKETL BRACKETR                      {: RESULT = new Node(NodeType.objcreat, ct); :};
