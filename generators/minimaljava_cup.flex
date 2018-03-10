@@ -57,6 +57,8 @@ DecDoubleLiteral = [0-9]*\.[0-9]+
 <YYINITIAL> "null"	{ return symbol(sym.NULL);}
 <YYINITIAL> "super"	{ return symbol(sym.SUPER);}
 
+<YYINITIAL> "public static void main(String[] args)" {return symbol(sym.MAIN);}
+
 
 // Primitive types
 
