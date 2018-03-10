@@ -1,10 +1,9 @@
 package com.ajsg2.minimaljava.codegen
 
-import com.ajsg2.minimaljava.common.ast.Node
-import com.ajsg2.minimaljava.parse.NonTerms
+import com.ajsg2.minimaljava.common.ast.{Node, NodeType}
 import com.typesafe.scalalogging.Logger
 import java.io.{DataOutputStream, OutputStream}
-import javassist.bytecode.{Bytecode, ClassFile, MethodInfo}
+import javassist.bytecode.{Bytecode, ClassFile, Descriptor, MethodInfo}
 import scala.collection.JavaConverters._
 
 class ClassGenerator(out: OutputStream, ast: Node) {
@@ -16,7 +15,7 @@ class ClassGenerator(out: OutputStream, ast: Node) {
 
 	private def consumeClass(node: Node): Unit = {
 		node.getNodeId match {
-			case NonTerms.classdef => val className: String = node.getData.asInstanceOf[String]
+			case NodeType.classdef => val className: String = node.getData.asInstanceOf[String]
 				val children = node.getChildren.asScala
 				// First child is the superclass
 				val superclass = getName(children.head)
@@ -25,13 +24,13 @@ class ClassGenerator(out: OutputStream, ast: Node) {
 				// Other children are class members
 				children.tail.foreach(consumeClassMember(_, cf))
 				write(cf)
-			case x => logger.error("nonterm " + NonTerms.ID(x) + " not implemented.")
+			case x => logger.error("nodetype " + x + " not implemented.")
 		}
 	}
 
 	private def getName(node: Node): String = {
-		if (node.getNodeId != NonTerms.name) {
-			logger.error("Expected name, received " + NonTerms.ID(node.getNodeId))
+		if (node.getNodeId != NodeType.name) {
+			logger.error("Expected name, received " + node.getNodeId)
 		}
 
 		val strings = node.getData.asInstanceOf[java.util.List[String]].asScala
@@ -42,16 +41,21 @@ class ClassGenerator(out: OutputStream, ast: Node) {
 
 	private def consumeClassMember(node: Node, cf: ClassFile): Unit = {
 		node.getNodeId match {
-			case NonTerms.constructordef =>
+			case NodeType.constructordef =>
+				// TODO: params
 				val code = new Bytecode(cf.getConstPool)
-				code.addAload(0)
-				code.addInvokespecial("java/lang/Object", MethodInfo.nameInit, "()V")
+				code.addAload(0) // this
+				code.addInvokespecial(cf.getSuperclass, MethodInfo.nameInit,
+					Descriptor.ofConstructor(null))
 				code.addReturn(null)
 				code.setMaxLocals(1)
-				val minfo = new MethodInfo(cf.getConstPool, MethodInfo.nameInit, "()V")
+				val minfo = new MethodInfo(cf.getConstPool, MethodInfo.nameInit,
+					Descriptor.ofConstructor(null))
 				minfo.setCodeAttribute(code.toCodeAttribute)
 				cf.addMethod(minfo)
-			case x => logger.error("Expected class member, received " + NonTerms.ID(x))
+			case NodeType.main =>
+				
+			case x => logger.error("Expected class member, received " + x)
 		}
 	}
 
