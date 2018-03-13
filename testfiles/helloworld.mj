@@ -1,11 +1,16 @@
-class TestClass extends xd.wow.Object {
-    //int y;
+class TestClass extends java.lang.Object {
 
     TestClass(){
         super();
     }
 
-    //int wow(){
-    //    return y+1;
-    //}
+    public static void main(String[] args){
+        java.lang.System.out.println(42);
+        java.lang.System.out.println(42L);
+        //java.lang.System.out.print('4');
+        //java.lang.System.out.print('2');
+        java.lang.System.out.println();		
+        java.lang.System.out.println(42.0);
+        java.lang.System.out.println(true);
+    }
 }
