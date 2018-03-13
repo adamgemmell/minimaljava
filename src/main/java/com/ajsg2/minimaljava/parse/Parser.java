@@ -1011,7 +1011,7 @@ class CUP$Parser$actions {
 		int plleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int plright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		List<Node> pl = (List<Node>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 pl.add(p);
+		 pl.add(0, p);
                                                  RESULT = pl; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("paramlist",39, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1051,7 +1051,7 @@ class CUP$Parser$actions {
 		int eleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Node e = (Node)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 al.add(e);
+		 al.add(0, e);
                                                  RESULT = al; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("arglist",41, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1068,7 +1068,7 @@ class CUP$Parser$actions {
 		int cbright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Node cb = (Node)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 List<Node> children = cd.getChildren();
-                                               children.add(cb);
+                                               children.add(0, cb);
                                                RESULT = new Node(NodeType.constructordef, cd.getData(), children ); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("constructordef",15, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1262,7 +1262,7 @@ class CUP$Parser$actions {
 		int slleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int slright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		List<Node> sl = (List<Node>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 sl.add(s);
+		 sl.add(0, s);
                                                RESULT = sl; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("statementlist",38, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1568,7 +1568,7 @@ class CUP$Parser$actions {
 		List<Node> ms = (List<Node>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 List<Node> children = Arrays.asList(p);
                                                    if(ms != null){
-                                                      children.addAll(ms);
+                                                      children.addAll(0, ms);
                                                    }
                                                    RESULT = new Node(NodeType.methodinv, id, children);
                                                 

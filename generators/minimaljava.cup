@@ -121,19 +121,19 @@ localvardef ::= type:t simplename:n             {: RESULT = new Node(NodeType.lo
 // Parameters
 param ::= type:type IDENT:id                  {: Node result = new Node(NodeType.param, id, type); :};
 paramlist ::= param:p                         {: RESULT = new LinkedList<>(Arrays.asList(p)); :}
-    | param:p paramlistcomma:pl               {: pl.add(p);
+    | param:p paramlistcomma:pl               {: pl.add(0, p);
                                                  RESULT = pl; :};
 paramlistcomma ::= COMMA paramlist:pl         {: RESULT = pl; :};
 
 // Args
 arglist ::= expression:e                      {: RESULT = new LinkedList<>(Arrays.asList(e)); :}
-    | arglist:al COMMA expression:e           {: al.add(e);
+    | arglist:al COMMA expression:e           {: al.add(0, e);
                                                  RESULT = al; :};
 
 // Constructor
 constructordef ::= constructordecl:cd constructorbody:cb
                                             {: List<Node> children = cd.getChildren();
-                                               children.add(cb);
+                                               children.add(0, cb);
                                                RESULT = new Node(NodeType.constructordef, cd.getData(), children ); :};
 constructordecl ::= IDENT:id BRACKETL paramlist:pl BRACKETR
                                             {: RESULT = new Node(NodeType.constructordecl, id, pl); :}
@@ -161,7 +161,7 @@ block ::= CURLYBRACEL CURLYBRACER               {: RESULT = new Node(NodeType.bl
 
 // Statements
 statementlist ::= statement:s               {: RESULT = new LinkedList<>(Arrays.asList(s)); :}
-    | statement:s statementlist:sl          {: sl.add(s);
+    | statement:s statementlist:sl          {: sl.add(0, s);
                                                RESULT = sl; :};
 statement ::= SEMICOLON
     | localvardef:lvd SEMICOLON             {: RESULT = lvd; :}
@@ -203,7 +203,7 @@ promexpression ::= methodinv:mi                 {: RESULT = mi; :}
 methodinv ::= name:n methodsig:ms               {: RESULT = new Node(NodeType.methodinv, n.getData(), ms); :}
     | primary:p IDENT:id methodsig:ms           {: List<Node> children = Arrays.asList(p);
                                                    if(ms != null){
-                                                      children.addAll(ms);
+                                                      children.addAll(0, ms);
                                                    }
                                                    RESULT = new Node(NodeType.methodinv, id, children);
                                                 :};
