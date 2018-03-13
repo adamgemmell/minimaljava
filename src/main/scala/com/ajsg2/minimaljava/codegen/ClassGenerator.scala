@@ -3,22 +3,26 @@ package com.ajsg2.minimaljava.codegen
 import com.ajsg2.minimaljava.common.ast.{Node, NodeType}
 import com.typesafe.scalalogging.Logger
 import java.io.{DataOutputStream, OutputStream}
-import javassist.bytecode.{Bytecode, ClassFile, Descriptor, MethodInfo}
+import javassist.bytecode._
+import javassist.{ClassPool, CtClass}
 import scala.collection.JavaConverters._
 
 class ClassGenerator(out: OutputStream, ast: Node) {
 
-	val logger = Logger(this.getClass.getName)
+	val logger: Logger = Logger(this.getClass.getName)
 	val dos = new DataOutputStream(out)
+	val cp = new ClassPool(true)
 
-	def generate(): Unit = consumeClass(ast)
+	def generate(): Unit = {
+		consumeClass(ast)
+	}
 
 	private def consumeClass(node: Node): Unit = {
 		node.getNodeId match {
 			case NodeType.classdef => val className: String = node.getData.asInstanceOf[String]
 				val children = node.getChildren.asScala
 				// First child is the superclass
-				val superclass = getName(children.head)
+				val superclass = Utils.getName(children.head, logger)
 				val cf = new ClassFile(false, className, superclass)
 
 				// Other children are class members
@@ -26,17 +30,6 @@ class ClassGenerator(out: OutputStream, ast: Node) {
 				write(cf)
 			case x => logger.error("nodetype " + x + " not implemented.")
 		}
-	}
-
-	private def getName(node: Node): String = {
-		if (node.getNodeId != NodeType.name) {
-			logger.error("Expected name, received " + node.getNodeId)
-		}
-
-		val strings = node.getData.asInstanceOf[java.util.List[String]].asScala
-
-		// Insert "." between each adjacent string, flatten
-		strings.mkString(".")
 	}
 
 	private def consumeClassMember(node: Node, cf: ClassFile): Unit = {
@@ -54,7 +47,23 @@ class ClassGenerator(out: OutputStream, ast: Node) {
 				minfo.setCodeAttribute(code.toCodeAttribute)
 				cf.addMethod(minfo)
 			case NodeType.main =>
+				val minfo = new MethodInfo(cf.getConstPool, "main",
+					Descriptor.ofMethod(CtClass.voidType,
+						Array(cp.get("java.lang.String[]"))))
+				minfo.setAccessFlags(AccessFlag.setPublic(AccessFlag.STATIC))
+
+				Utils.assertNumChildren(node, 1, logger)
+				// Block statements
+				val statements = node.getChildren.get(0).getChildren.asScala
+				val code = new BytecodeGenerator(statements, new Bytecode(cf.getConstPool), cp)
+						.generate()
+				code.addReturn(CtClass.voidType)
 				
+				code.incMaxLocals(1)
+
+				minfo.setCodeAttribute(code.toCodeAttribute)
+				cf.addMethod(minfo)
+
 			case x => logger.error("Expected class member, received " + x)
 		}
 	}
