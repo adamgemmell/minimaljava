@@ -55,11 +55,10 @@ class ClassGenerator(out: OutputStream, ast: Node) {
 				Utils.assertNumChildren(node, 1, logger)
 				// Block statements
 				val statements = node.getChildren.get(0).getChildren.asScala
-				val code = new BytecodeGenerator(statements, new Bytecode(cf.getConstPool), cp)
-						.generate()
-				code.addReturn(CtClass.voidType)
-				
+				val code = new Bytecode(cf.getConstPool)
 				code.incMaxLocals(1)
+				new BytecodeGenerator(statements, code, cp).generate()
+				code.addReturn(CtClass.voidType)
 
 				minfo.setCodeAttribute(code.toCodeAttribute)
 				cf.addMethod(minfo)

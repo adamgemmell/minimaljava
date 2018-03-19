@@ -2,6 +2,7 @@ package com.ajsg2.minimaljava.codegen
 
 import com.ajsg2.minimaljava.common.ast.{Node, NodeType}
 import com.typesafe.scalalogging.Logger
+import java.lang.reflect.Type
 import javassist.bytecode.{Bytecode, Descriptor, Opcode}
 import javassist.{ClassPool, CtClass, NotFoundException}
 import scala.collection.JavaConverters._
@@ -11,7 +12,8 @@ class BytecodeGenerator(
 		statements: Seq[Node],
 		bc: Bytecode,
 		cp: ClassPool = new ClassPool(true),
-		varMap: Map[String, Int] = new LinkedHashMap[String, Int]()) {
+		varMap: Map[String, (Int, java.lang.reflect.Type)]
+		= new LinkedHashMap[String, (Int, java.lang.reflect.Type)]()) {
 
 	val logger = Logger(this.getClass.getName)
 
@@ -41,6 +43,26 @@ class BytecodeGenerator(
 						}
 
 					case None => // TODO: static method
+				}
+
+			case NodeType.localvardef =>
+				Utils.assertNumChildren(stmt, 1, logger)
+
+				val varType = stmt.getChildren.get(0).getType
+				val name = Utils.getName(stmt.getData.asInstanceOf[Node], logger)
+				val nextVarNum = if (varMap.isEmpty) {
+					0
+				} else {
+					val maxVar: (String, (Int, Type)) = varMap.maxBy(_._2._1)
+					bc.getMaxLocals + Utils.varSize(maxVar._2._2) - 1
+				}
+
+				varMap.get(name) match {
+					case Some(_) => logger.error("Local variable " + name + " already exists.")
+						System.exit(1)
+					case None =>
+						varMap += ((name, (nextVarNum, varType)))
+						bc.incMaxLocals(Utils.varSize(varType))
 				}
 
 			case x =>
@@ -106,7 +128,7 @@ class BytecodeGenerator(
 					}
 					Some(clazztype)
 				}
-			case Some(x) => None// TODO: var
+			case Some(_) => None// TODO: var
 		}
 	}
 

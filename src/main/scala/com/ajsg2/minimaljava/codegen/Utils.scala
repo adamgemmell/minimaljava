@@ -36,4 +36,12 @@ package object Utils {
 					"children, found " + n.getChildren.size())
 		}
 	}
+
+	// Longs & doubles use 2 words
+	def varSize(t: java.lang.reflect.Type): Int = if (t == java.lang.Long.TYPE ||
+			t == java.lang.Double.TYPE) {
+		2
+	} else {
+		1
+	}
 }
