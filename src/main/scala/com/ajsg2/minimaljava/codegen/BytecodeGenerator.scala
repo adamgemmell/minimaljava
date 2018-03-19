@@ -3,7 +3,7 @@ package com.ajsg2.minimaljava.codegen
 import com.ajsg2.minimaljava.common.ast.{Node, NodeType}
 import com.typesafe.scalalogging.Logger
 import javassist.bytecode.{Bytecode, Descriptor, Opcode}
-import javassist.{ClassPool, CtClass}
+import javassist.{ClassPool, CtClass, NotFoundException}
 import scala.collection.JavaConverters._
 import scala.collection.mutable.{LinkedHashMap, ListBuffer, Map}
 
@@ -21,7 +21,7 @@ class BytecodeGenerator(
 	}
 
 
-	private def consumeStatement(stmt: Node) = {
+	private def consumeStatement(stmt: Node): Unit = {
 		stmt.getNodeId match {
 			case NodeType.methodinv =>
 				val ref = stmt.getData.asInstanceOf[java.util.List[String]].asScala
@@ -29,12 +29,22 @@ class BytecodeGenerator(
 					case Some(clazz) =>
 						val argTypes = ListBuffer[CtClass]()
 						stmt.getChildren.forEach(x => argTypes += getArg(x).orNull) // Args
-					val desc = Descriptor.ofMethod(CtClass.voidType, argTypes.toArray)
-						bc.addInvokevirtual(clazz, ref.last, desc)
+					val argArray = argTypes.toArray
+
+						try {
+							val meth = clazz.getDeclaredMethod(ref.last, argArray)
+							val desc = Descriptor.ofMethod(meth.getReturnType, argArray)
+							bc.addInvokevirtual(clazz, ref.last, desc)
+						} catch {
+							case nfe: NotFoundException => logger.error(
+								"Could not find method " + ref.last + " with this signature.")
+						}
+
 					case None => // TODO: static method
 				}
 
-			case x => logger.error("Expected statement, received " + x)
+			case x =>
+				logger.error("Expected statement, received " + x)
 				System.exit(1)
 		}
 	}
@@ -44,13 +54,17 @@ class BytecodeGenerator(
 		arg.getNodeId match {
 			case NodeType.lit =>
 				arg.getType match {
-					case java.lang.Integer.TYPE => bc.addIconst(arg.getData.asInstanceOf[java.lang.Integer])
+					case java.lang.Integer.TYPE => bc
+							.addIconst(arg.getData.asInstanceOf[java.lang.Integer])
 						Some(CtClass.intType)
-					case java.lang.Character.TYPE => bc.addIconst(arg.getData.asInstanceOf[java.lang.Integer])
+					case java.lang.Character.TYPE => bc
+							.addIconst(arg.getData.asInstanceOf[java.lang.Character].charValue())
 						Some(CtClass.charType)
-					case java.lang.Long.TYPE => bc.addLconst(arg.getData.asInstanceOf[java.lang.Long])
+					case java.lang.Long.TYPE => bc
+							.addLconst(arg.getData.asInstanceOf[java.lang.Long])
 						Some(CtClass.longType)
-					case java.lang.Double.TYPE => bc.addDconst(arg.getData.asInstanceOf[java.lang.Double])
+					case java.lang.Double.TYPE => bc
+							.addDconst(arg.getData.asInstanceOf[java.lang.Double])
 						Some(CtClass.doubleType)
 					case java.lang.Boolean.TYPE =>
 						val bool = arg.getData.asInstanceOf[java.lang.Boolean]
@@ -63,11 +77,11 @@ class BytecodeGenerator(
 						}
 					case null => bc.add(Opcode.ACONST_NULL)
 						Some(null)
-					case x => logger.error("What did you just give me")
+					case _ => logger.error("What did you just give me")
 						None
 				}
 			case NodeType.name => getRef(arg.getData.asInstanceOf[java.util.List[String]].asScala)
-			case x => logger.error("What did you just give me")
+			case _ => logger.error("What did you just give me")
 				None
 		}
 	}
