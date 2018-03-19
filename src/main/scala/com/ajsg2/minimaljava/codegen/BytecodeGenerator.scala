@@ -38,7 +38,7 @@ class BytecodeGenerator(
 							val desc = Descriptor.ofMethod(meth.getReturnType, argArray)
 							bc.addInvokevirtual(clazz, ref.last, desc)
 						} catch {
-							case nfe: NotFoundException => logger.error(
+							case _: NotFoundException => logger.error(
 								"Could not find method " + ref.last + " with this signature.")
 						}
 
@@ -64,10 +64,43 @@ class BytecodeGenerator(
 						varMap += ((name, (nextVarNum, varType)))
 						bc.incMaxLocals(Utils.varSize(varType))
 				}
+			case NodeType.varassignment => val name = Utils
+					.getName(stmt.getData.asInstanceOf[Node], logger)
+				varMap.get(name) match {
+					case None => logger.error("Variable " + name + " not found.")
+						System.exit(1)
+					case Some((loc, varType)) =>
+						Utils.assertNumChildren(stmt, 1, logger)
+						// Evaluate RHS
+						setVar(loc, varType, stmt.getChildren.get(0))
+				}
 
 			case x =>
 				logger.error("Expected statement, received " + x)
 				System.exit(1)
+		}
+	}
+
+	private def setVar(loc: Int, varType: java.lang.reflect.Type, value: Node): Unit = {
+		if (varType != value.getType) {
+			logger.error("Mismatched type for assignment to local variable.")
+			System.exit(1)
+		}
+
+		getArg(value)
+
+		varType match {
+			case java.lang.Integer.TYPE =>
+				bc.addIstore(loc)
+			case java.lang.Character.TYPE =>
+				bc.addIstore(loc)
+			case java.lang.Long.TYPE =>
+				bc.addLstore(loc)
+			case java.lang.Double.TYPE =>
+				bc.addDstore(loc)
+			case java.lang.Boolean.TYPE =>
+				bc.addIstore(loc)
+			case _ => bc.addAstore(loc)
 		}
 	}
 
@@ -80,7 +113,8 @@ class BytecodeGenerator(
 							.addIconst(arg.getData.asInstanceOf[java.lang.Integer])
 						Some(CtClass.intType)
 					case java.lang.Character.TYPE => bc
-							.addIconst(arg.getData.asInstanceOf[java.lang.Character].charValue())
+							.addIconst(
+								arg.getData.asInstanceOf[java.lang.Character].charValue())
 						Some(CtClass.charType)
 					case java.lang.Long.TYPE => bc
 							.addLconst(arg.getData.asInstanceOf[java.lang.Long])
@@ -102,7 +136,8 @@ class BytecodeGenerator(
 					case _ => logger.error("What did you just give me")
 						None
 				}
-			case NodeType.name => getRef(arg.getData.asInstanceOf[java.util.List[String]].asScala)
+			case NodeType.name => getRef(
+				arg.getData.asInstanceOf[java.util.List[String]].asScala)
 			case _ => logger.error("What did you just give me")
 				None
 		}
@@ -128,12 +163,33 @@ class BytecodeGenerator(
 					}
 					Some(clazztype)
 				}
-			case Some(_) => None// TODO: var
+			case Some((loc, varType)) =>
+				varType match {
+					case java.lang.Integer.TYPE =>
+						bc.addIload(loc)
+						Some(CtClass.intType)
+					case java.lang.Character.TYPE =>
+						bc.addIload(loc)
+						Some(CtClass.charType)
+					case java.lang.Long.TYPE =>
+						bc.addLload(loc)
+						Some(CtClass.longType)
+					case java.lang.Double.TYPE =>
+						bc.addDload(loc)
+						Some(CtClass.doubleType)
+					case java.lang.Boolean.TYPE =>
+						bc.addIload(loc)
+						Some(CtClass.booleanType)
+					case _ => bc.addAload(loc)
+						None // TODO: return ctclass
+				}
 		}
 	}
 
 	// Return class and remaining identifiers, if any
-	private def search(ref: Seq[String], rem: Seq[String]): (CtClass, Seq[String]) = {
+	private def search(ref: Seq[String], rem: Seq[String]): (CtClass, Seq[String])
+
+	= {
 
 		if (ref.isEmpty) {
 			logger.error("Could not find reference: " + Utils.getStructure(rem))
