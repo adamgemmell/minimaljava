@@ -5,12 +5,14 @@ class TestClass extends java.lang.Object {
     }
 
     public static void main(String[] args){
-        java.lang.System.out.println(42);
-        java.lang.System.out.println(42L);
-        //java.lang.System.out.print('4');
-        //java.lang.System.out.print('2');
-        java.lang.System.out.println();		
-        java.lang.System.out.println(42.0);
-        java.lang.System.out.println(true);
+        int x;
+        x = 42;
+        java.lang.System.out.println(x);
+        char y;
+        y = 'w';
+        java.lang.System.out.println(x);
+        long z;
+        z = 42L;
+        java.lang.System.out.println(z);
     }
 }
