@@ -201,7 +201,7 @@ promexpression ::= methodinv:mi                 {: RESULT = mi; :}
     | objcreat:oc                               {: RESULT = oc; :};
 
 methodinv ::= name:n methodsig:ms               {: RESULT = new Node(NodeType.methodinv, n.getData(), ms); :}
-    | primary:p IDENT:id methodsig:ms           {: List<Node> children = Arrays.asList(p);
+    | primary:p IDENT:id methodsig:ms           {: List<Node> children = Arrays.asList(new Node(NodeType.expression, p));
                                                    if(ms != null){
                                                       children.addAll(0, ms);
                                                    }

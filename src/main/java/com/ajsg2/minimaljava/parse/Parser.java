@@ -1566,7 +1566,7 @@ class CUP$Parser$actions {
 		int msleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int msright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		List<Node> ms = (List<Node>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 List<Node> children = Arrays.asList(p);
+		 List<Node> children = Arrays.asList(new Node(NodeType.expression, p));
                                                    if(ms != null){
                                                       children.addAll(0, ms);
                                                    }
