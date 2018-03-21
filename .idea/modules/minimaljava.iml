@@ -22,7 +22,12 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="sbt: ch.qos.logback:logback-classic:1.2.3:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.javassist:javassist:3.22.0-GA:jar" level="project" />
+    <orderEntry type="library" name="sbt: ch.qos.logback:logback-core:1.2.3:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.github.vbmacher:java-cup-runtime:11b:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.typesafe.scala-logging:scala-logging_2.12:3.7.2:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang:scala-library:2.12.4:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang:scala-reflect:2.12.4:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.slf4j:slf4j-api:1.7.25:jar" level="project" />
     <orderEntry type="module-library">
       <library name="sbt: unmanaged-jars">
         <CLASSES>
@@ -38,12 +43,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="sbt: org.slf4j:slf4j-api:1.7.25:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.scala-lang:scala-reflect:2.12.4:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.scala-lang:scala-library:2.12.4:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.typesafe.scala-logging:scala-logging_2.12:3.7.2:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.github.vbmacher:java-cup-runtime:11b:jar" level="project" />
-    <orderEntry type="library" name="sbt: ch.qos.logback:logback-core:1.2.3:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.javassist:javassist:3.22.0-GA:jar" level="project" />
     <orderEntry type="library" name="scala-sdk-2.12.4" level="project" />
   </component>
 </module>
