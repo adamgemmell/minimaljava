@@ -10,9 +10,9 @@ class TestClass extends java.lang.Object {
         java.lang.System.out.println(x);
         char y;
         y = 'w';
-        java.lang.System.out.println(x);
-        long z;
-        z = 42L;
-        java.lang.System.out.println(z);
+        java.lang.System.out.println(y);
+        java.io.PrintStream z;
+        z = java.lang.System.out;
+        z.println(2);
     }
 }
