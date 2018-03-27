@@ -29,7 +29,7 @@ class BytecodeGenerator(
 				getRef(ref.dropRight(1)) match {
 					case Some(clazz) =>
 						val argTypes = ListBuffer[CtClass]()
-						stmt.getChildren.forEach(x => argTypes += getArg(x).orNull) // Args
+						stmt.getChildren.forEach(x => argTypes += evalExpression(x).orNull) // Args
 					val argArray = argTypes.toArray
 
 						try {
@@ -85,7 +85,7 @@ class BytecodeGenerator(
 
 	private def setVar(loc: Int, varClazz: CtClass, value: Node): Unit = {
 
-		val typeRHS: CtClass = getArg(value).getOrElse({
+		val typeRHS: CtClass = evalExpression(value).getOrElse({
 			System.exit(1)
 			CtClass.voidType
 		})
@@ -108,31 +108,36 @@ class BytecodeGenerator(
 				bc.addIstore(loc)
 			case _ => bc.addAstore(loc)
 		}
-
 	}
 
-	// Puts the required arg onto the stack
-	private def getArg(arg: Node): Option[CtClass]
+	private def evalExpression(node: Node): Option[CtClass] = {
+		if (node.getNodeId != NodeType.expression) {
+			logger.error("Error evaluating expression")
+			None
+		}
 
-	= {
-		arg.getNodeId match {
+		Utils.assertNumChildren(node, 1, logger)
+		eval(node.getChildren.get(0))
+	}
+
+	private def eval(exp: Node): Option[CtClass] = {
+		exp.getNodeId match {
 			case NodeType.lit =>
-				arg.getType match {
+				exp.getType match {
 					case java.lang.Integer.TYPE => bc
-							.addIconst(arg.getData.asInstanceOf[java.lang.Integer])
+							.addIconst(exp.getData.asInstanceOf[java.lang.Integer])
 						Some(CtClass.intType)
 					case java.lang.Character.TYPE => bc
-							.addIconst(
-								arg.getData.asInstanceOf[java.lang.Character].charValue())
+							.addIconst(exp.getData.asInstanceOf[java.lang.Character].charValue())
 						Some(CtClass.charType)
 					case java.lang.Long.TYPE => bc
-							.addLconst(arg.getData.asInstanceOf[java.lang.Long])
+							.addLconst(exp.getData.asInstanceOf[java.lang.Long])
 						Some(CtClass.longType)
 					case java.lang.Double.TYPE => bc
-							.addDconst(arg.getData.asInstanceOf[java.lang.Double])
+							.addDconst(exp.getData.asInstanceOf[java.lang.Double])
 						Some(CtClass.doubleType)
 					case java.lang.Boolean.TYPE =>
-						val bool = arg.getData.asInstanceOf[java.lang.Boolean]
+						val bool = exp.getData.asInstanceOf[java.lang.Boolean]
 						if (bool) {
 							bc.addIconst(1)
 							Some(CtClass.booleanType)
@@ -146,16 +151,113 @@ class BytecodeGenerator(
 						None
 				}
 			case NodeType.name => getRef(
-				arg.getData.asInstanceOf[java.util.List[String]].asScala)
-			case _ => logger.error("What did you just give me")
+				exp.getData.asInstanceOf[java.util.List[String]].asScala)
+			case NodeType.infixop => Utils.assertNumChildren(exp, 2, logger)
+				val t1 = eval(exp.getChildren.get(0)).get
+				val t2 = eval(exp.getChildren.get(1)).get
+				val t = Utils.lct(t1, t2, logger)
+
+				if (t != t1) {
+					logger.error("Oh god") // TODO: proper typing
+				}
+				addCast(t2, t)
+				addOp(exp.getData.asInstanceOf[Node], t)
+				Some(t)
+			case _ => logger.error(
+				"Expression of type " + exp.getNodeId + " either invalid or not implemented.")
 				None
 		}
 	}
 
-	// Add getStatics until this reference is placed on the stack
-	private def getRef(ref: Seq[String]): Option[CtClass]
+	/**
+	  * Adds an operator of the specified type
+	  *
+	  * @param node the operator
+	  * @param t    the type of the operator
+	  */
+	private def addOp(node: Node, t: CtClass): Unit = {
+		node.getNodeId match {
+			case NodeType.plus => t match {
+				case Utils.charType => bc.add(Opcode.IADD)
+				case Utils.intType => bc.add(Opcode.IADD)
+				case Utils.longType => bc.add(Opcode.LADD)
+				case Utils.doubleType => bc.add(Opcode.DADD)
+			}
+			case NodeType.minus => t match {
+				case Utils.charType => bc.add(Opcode.ISUB)
+				case Utils.intType => bc.add(Opcode.ISUB)
+				case Utils.longType => bc.add(Opcode.LSUB)
+				case Utils.doubleType => bc.add(Opcode.DSUB)
+			}
+			case NodeType.mult => t match {
+				case Utils.charType => bc.add(Opcode.IMUL)
+				case Utils.intType => bc.add(Opcode.IMUL)
+				case Utils.longType => bc.add(Opcode.LMUL)
+				case Utils.doubleType => bc.add(Opcode.DMUL)
+			}
+			case NodeType.div => t match {
+				case Utils.charType => bc.add(Opcode.IDIV)
+				case Utils.intType => bc.add(Opcode.IDIV)
+				case Utils.longType => bc.add(Opcode.LDIV)
+				case Utils.doubleType => bc.add(Opcode.DDIV)
+			}
+			case NodeType.mod => t match {
+				case Utils.charType => bc.add(Opcode.IREM)
+				case Utils.intType => bc.add(Opcode.IREM)
+				case Utils.longType => bc.add(Opcode.LREM)
+				case Utils.doubleType => bc.add(Opcode.DREM)
+			}
+			case NodeType.gt => t match {
+				case Utils.charType => bc.add(Opcode.IADD)
+				case Utils.intType => val basePC = bc.currentPc()
+				//	bc.add
+				case Utils.longType => bc.add(Opcode.LADD)
+				case Utils.doubleType => bc.add(Opcode.DADD)
+			}
+			case _ => logger.error("Operation " + node.getNodeId + " not implemented.")
+		}
 
-	= {
+	}
+
+	/**
+	  * Adds a cast from primitive t1 to primitive t2.
+	  * Ignores booleans, and whether this is a widening or narrowing cast.
+	  *
+	  * @param t1 Cast from
+	  * @param t2 Cast to
+	  */
+	private def addCast(t1: CtClass, t2: CtClass): Unit = {
+		t1 match {
+			case Utils.charType => t2 match {
+				case Utils.charType =>
+				case Utils.intType =>
+				case Utils.longType => bc.add(Opcode.I2L)
+				case Utils.doubleType => bc.add(Opcode.I2D)
+			}
+			case Utils.intType => t2 match {
+				case Utils.charType => bc.add(Opcode.I2C)
+				case Utils.intType =>
+				case Utils.longType => bc.add(Opcode.I2L)
+				case Utils.doubleType => bc.add(Opcode.I2D)
+			}
+			case Utils.longType => t2 match {
+				case Utils.charType => bc.add(Opcode.I2L)
+				case Utils.intType => bc.add(Opcode.I2L)
+				case Utils.longType =>
+				case Utils.doubleType => bc.add(Opcode.L2D)
+			}
+			case Utils.doubleType => t2 match {
+				case Utils.charType => bc.add(Opcode.D2I)
+					bc.add(Opcode.I2C)
+				case Utils.intType => bc.add(Opcode.D2I)
+				case Utils.longType => bc.add(Opcode.I2L)
+				case Utils.doubleType =>
+			}
+		}
+	}
+
+	// Add getStatics until this reference is placed on the stack
+	private def getRef(ref: Seq[String]): Option[CtClass] = {
 		varMap.get(ref.head) match {
 			case None => // Not local var
 				val (clazz, rem) = search(ref, List())
@@ -193,10 +295,7 @@ class BytecodeGenerator(
 	}
 
 	// Return class and remaining identifiers, if any
-	private def search(ref: Seq[String], rem: Seq[String]): (CtClass, Seq[String])
-
-	= {
-
+	private def search(ref: Seq[String], rem: Seq[String]): (CtClass, Seq[String]) = {
 		if (ref.isEmpty) {
 			logger.error("Could not find reference: " + Utils.getStructure(rem))
 			System.exit(1)

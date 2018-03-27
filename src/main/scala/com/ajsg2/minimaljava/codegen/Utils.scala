@@ -8,7 +8,7 @@ import scala.collection.JavaConverters._
 package object Utils {
 
 	// Stable identifiers for pattern matching
-	final val intType: CtClass = CtClass.intType
+	final val intType = CtClass.intType
 	final val charType = CtClass.charType
 	final val longType = CtClass.longType
 	final val doubleType = CtClass.doubleType
@@ -32,6 +32,35 @@ package object Utils {
 	// Above but not only for nodes
 	def getStructure(strings: Seq[String]): String = strings.mkString(".")
 
+	def lct(t1: CtClass, t2: CtClass, logger: Logger): CtClass = {
+		// Our simplified primitive type conversion
+		def typeOrder(t: CtClass): Int = t match {
+			case `charType` => 0
+			case `intType` => 1
+			case `longType` => 2
+			case `doubleType` => 3
+			case _ => -1
+		}
+
+		val to1 = typeOrder(t1)
+		val to2 = typeOrder(t2)
+		if (to1 == -1 || to2 == -1) {
+			logger.error("Cannot implicitly convert between " + t1 + " and " + t2 +
+					". Try a manual cast if both are objects.")
+			System.exit(1)
+		}
+
+		math.max(to1, to2) match {
+			case 0 => charType
+			case 1 => intType
+			case 2 => longType
+			case 3 => doubleType
+			case _ => logger.error("waddafack")
+				CtClass.voidType
+		}
+
+	}
+
 	/**
 	  * Check that a node has a certain number of children. Errors likely if this is not true.
 	  *
@@ -42,7 +71,7 @@ package object Utils {
 	def assertNumChildren(n: Node, i: Int, logger: Logger): Unit = {
 		if (n.getChildren.asScala.lengthCompare(i) != 0) {
 			logger.warn("Internal error: For node " + n.getType + " expected " + i +
-					"children, found " + n.getChildren.size())
+					" children, found " + n.getChildren.size())
 		}
 	}
 
