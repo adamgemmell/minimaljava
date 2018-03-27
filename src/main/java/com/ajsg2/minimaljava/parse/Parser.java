@@ -1036,7 +1036,7 @@ class CUP$Parser$actions {
 		int eleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Node e = (Node)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 RESULT = new LinkedList<>(Arrays.asList(e)); 
+		 RESULT = new LinkedList<>(Arrays.asList(new Node(NodeType.expression, e))); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("arglist",41, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1051,7 +1051,7 @@ class CUP$Parser$actions {
 		int eleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Node e = (Node)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 al.add(0, e);
+		 al.add(0, new Node(NodeType.expression, e));
                                                  RESULT = al; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("arglist",41, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1350,7 +1350,7 @@ class CUP$Parser$actions {
 		int eleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Node e = (Node)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 RESULT = new Node(NodeType.varassignment, n, e); 
+		 RESULT = new Node(NodeType.varassignment, n, new Node(NodeType.expression, e)); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varassignment",31, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1380,7 +1380,16 @@ class CUP$Parser$actions {
           case 77: // opexpression ::= opexpression infixop opexpression 
             {
               Node RESULT =null;
-
+		int e1left = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).right;
+		Node e1 = (Node)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		int opleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
+		int opright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
+		Node op = (Node)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		int e2left = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int e2right = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		Node e2 = (Node)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		 RESULT = new Node(NodeType.infixop, op, Arrays.asList(e1, e2)); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("opexpression",28, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1401,7 +1410,13 @@ class CUP$Parser$actions {
           case 79: // castexpression ::= BRACKETL expression BRACKETR opexpression 
             {
               Node RESULT =null;
-
+		int eleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).right;
+		Node e = (Node)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		int e2left = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int e2right = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		Node e2 = (Node)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		 RESULT = new Node(NodeType.cast, e, e2); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("castexpression",29, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1410,7 +1425,13 @@ class CUP$Parser$actions {
           case 80: // castexpression ::= BRACKETL primtype BRACKETR opexpression 
             {
               Node RESULT =null;
-
+		int tleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).right;
+		Node t = (Node)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		int eleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		Node e = (Node)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		 RESULT = new Node(NodeType.cast, t, e); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("castexpression",29, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

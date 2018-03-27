@@ -126,8 +126,8 @@ paramlist ::= param:p                         {: RESULT = new LinkedList<>(Array
 paramlistcomma ::= COMMA paramlist:pl         {: RESULT = pl; :};
 
 // Args
-arglist ::= expression:e                      {: RESULT = new LinkedList<>(Arrays.asList(e)); :}
-    | arglist:al COMMA expression:e           {: al.add(0, e);
+arglist ::= expression:e                      {: RESULT = new LinkedList<>(Arrays.asList(new Node(NodeType.expression, e))); :}
+    | arglist:al COMMA expression:e           {: al.add(0, new Node(NodeType.expression, e));
                                                  RESULT = al; :};
 
 // Constructor
@@ -171,20 +171,20 @@ statement ::= SEMICOLON
     | RETURN expression SEMICOLON
     | block;
 
-varassignment ::= name:n ASSIGN expression:e  {: RESULT = new Node(NodeType.varassignment, n, e); :};
+varassignment ::= name:n ASSIGN expression:e  {: RESULT = new Node(NodeType.varassignment, n, new Node(NodeType.expression, e)); :};
 
 ifelse ::= IF BRACKETL expression EQ expression BRACKETR block ELSE block;
 
 // Simplified version from https://www.cs.cornell.edu/andru/javaspec/19.doc.html
 expression ::= opexpression:o                   {: RESULT = o; :};
 
-opexpression ::= opexpression infixop opexpression
+opexpression ::= opexpression:e1 infixop:op opexpression:e2 {: RESULT = new Node(NodeType.infixop, op, Arrays.asList(e1, e2)); :}
     | castexpression:c                          {: RESULT = c; :};
 
-// Whether or not this is a valid cast must be decided later
-// due to LALR(1) limitations
-castexpression ::= BRACKETL expression BRACKETR opexpression
-    | BRACKETL primtype BRACKETR opexpression
+// Whether or not this is a valid cast must be decided later due to LALR(1) limitations
+castexpression ::= BRACKETL expression:e BRACKETR opexpression:e2
+                                                {: RESULT = new Node(NodeType.cast, e, e2); :}
+    | BRACKETL primtype:t BRACKETR opexpression:e {: RESULT = new Node(NodeType.cast, t, e); :}
     | unaryexpression:u                         {: RESULT = u; :};
 
 unaryexpression ::= NOT unaryexpression:u       {: RESULT = new Node(NodeType.not, u); :}
