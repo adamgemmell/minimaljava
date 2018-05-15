@@ -29,37 +29,8 @@ package object Utils {
 		strings.mkString(".")
 	}
 
-	// Above but not only for nodes
+	// Above but for strings
 	def getStructure(strings: Seq[String]): String = strings.mkString(".")
-
-	def lct(t1: CtClass, t2: CtClass, logger: Logger): CtClass = {
-		// Our simplified primitive type conversion
-		def typeOrder(t: CtClass): Int = t match {
-			case `charType` => 0
-			case `intType` => 1
-			case `longType` => 2
-			case `doubleType` => 3
-			case _ => -1
-		}
-
-		val to1 = typeOrder(t1)
-		val to2 = typeOrder(t2)
-		if (to1 == -1 || to2 == -1) {
-			logger.error("Cannot implicitly convert between " + t1 + " and " + t2 +
-					". Try a manual cast if both are objects.")
-			System.exit(1)
-		}
-
-		math.max(to1, to2) match {
-			case 0 => charType
-			case 1 => intType
-			case 2 => longType
-			case 3 => doubleType
-			case _ => logger.error("waddafack")
-				CtClass.voidType
-		}
-
-	}
 
 	/**
 	  * Check that a node has a certain number of children. Errors likely if this is not true.
@@ -95,12 +66,12 @@ package object Utils {
 	  * @param t The type
 	  * @return
 	  */
-	def varSize(t: java.lang.reflect.Type): Int = if (t == java.lang.Long.TYPE ||
-			t == java.lang.Double.TYPE) {
-		2
-	} else {
-		1
-	}
+	def varSize(t: CtClass): Int =
+		if (t == longType || t == doubleType) {
+			2
+		} else {
+			1
+		}
 
 	/**
 	  * Get a CtClass representing a class name
@@ -128,32 +99,5 @@ package object Utils {
 		}
 
 
-	}
-
-	/**
-	  * Get a CtClass representing a type
-	  *
-	  * @param varType the type
-	  * @param cp      class pool in which to search for classes
-	  * @param logger  logger in which to report an error
-	  * @return A CtClass
-	  */
-	def getCtClass(varType: java.lang.reflect.Type, cp: ClassPool,
-			logger: Logger): CtClass = {
-		varType match {
-			case java.lang.Integer.TYPE => CtClass.intType
-			case java.lang.Character.TYPE => CtClass.charType
-			case java.lang.Long.TYPE => CtClass.longType
-			case java.lang.Double.TYPE => CtClass.doubleType
-			case java.lang.Boolean.TYPE => CtClass.booleanType
-			case _ => try {
-				cp.get(varType.getTypeName)
-			} catch {
-				case _: NotFoundException => logger
-						.error("Could not find class " + varType.getTypeName)
-					System.exit(1)
-					CtClass.voidType
-			}
-		}
 	}
 }

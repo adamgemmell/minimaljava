@@ -21,7 +21,6 @@ class BytecodeGenerator(
 		bc
 	}
 
-
 	private def consumeStatement(stmt: Node): Unit = {
 		stmt.getNodeId match {
 			case NodeType.methodinv =>
@@ -29,7 +28,10 @@ class BytecodeGenerator(
 				getRef(ref.dropRight(1)) match {
 					case Some(clazz) =>
 						val argTypes = ListBuffer[CtClass]()
-						stmt.getChildren.forEach(x => argTypes += evalExpression(x).orNull) // Args
+						stmt.getChildren.forEach(x => {
+							evalExpression(x)
+							argTypes += x.getChildren.get(0).getType
+						}) // Args
 					val argArray = argTypes.toArray
 
 						try {
@@ -47,16 +49,14 @@ class BytecodeGenerator(
 			case NodeType.localvardef =>
 				Utils.assertNumChildren(stmt, 1, logger)
 
-				val varType = stmt.getChildren.get(0).getType
+				val varType = Option(stmt.getChildren.get(0).getType)
 
-				val clazz = if (varType == null) {
+				val clazz = varType.getOrElse({
 					Utils.assertNumChildren(stmt, 1, logger)
 					val clazzName = Utils
 							.getName(stmt.getChildren.get(0).getChildren.get(0), logger)
 					Utils.getCtClass(clazzName, cp, logger)
-				} else {
-					Utils.getCtClass(varType, cp, logger)
-				}
+				})
 				val name = Utils.getName(stmt.getData.asInstanceOf[Node], logger)
 				val nextVarNum = bc.getMaxLocals
 
@@ -65,7 +65,7 @@ class BytecodeGenerator(
 						System.exit(1)
 					case None =>
 						varMap += ((name, (nextVarNum, clazz)))
-						bc.incMaxLocals(Utils.varSize(varType))
+						bc.incMaxLocals(Utils.varSize(clazz))
 				}
 			case NodeType.varassignment => val name = Utils
 					.getName(stmt.getData.asInstanceOf[Node], logger)
@@ -83,86 +83,82 @@ class BytecodeGenerator(
 		}
 	}
 
-	private def setVar(loc: Int, varClazz: CtClass, value: Node): Unit = {
-
-		val typeRHS: CtClass = evalExpression(value).getOrElse({
+	private def setVar(loc: Int, varType: CtClass, value: Node): Unit = {
+		evalExpression(value)
+		val typeRHS: CtClass = value.getChildren.get(0).getType
+		if (typeRHS == null) {
+			logger.error("Type isn't set???")
 			System.exit(1)
-			CtClass.voidType
-		})
+		}
 
-		if (varClazz != typeRHS) {
+		if (varType != typeRHS) {
 			logger.error("Mismatched type for assignment to local variable.")
 			System.exit(1)
 		}
 
-		varClazz match {
-			case Utils.intType =>
-				bc.addIstore(loc)
-			case Utils.charType =>
+		varType match {
+			case Utils.intType | Utils.charType | Utils.booleanType =>
 				bc.addIstore(loc)
 			case Utils.longType =>
 				bc.addLstore(loc)
 			case Utils.doubleType =>
 				bc.addDstore(loc)
-			case Utils.booleanType =>
-				bc.addIstore(loc)
 			case _ => bc.addAstore(loc)
 		}
 	}
 
-	private def evalExpression(node: Node): Option[CtClass] = {
+	private def evalExpression(node: Node): Unit = {
 		if (node.getNodeId != NodeType.expression) {
 			logger.error("Error evaluating expression")
 			None
 		}
 
 		Utils.assertNumChildren(node, 1, logger)
+		Typing.typeOf(node.getChildren.get(0))
+		node.prettyPrint()
 		eval(node.getChildren.get(0))
 	}
 
-	private def eval(exp: Node): Option[CtClass] = {
+	private def eval(exp: Node): Unit = {
 		exp.getNodeId match {
 			case NodeType.lit =>
 				exp.getType match {
-					case java.lang.Integer.TYPE => bc
+					case Utils.intType => bc
 							.addIconst(exp.getData.asInstanceOf[java.lang.Integer])
-						Some(CtClass.intType)
-					case java.lang.Character.TYPE => bc
+					case Utils.charType => bc
 							.addIconst(exp.getData.asInstanceOf[java.lang.Character].charValue())
-						Some(CtClass.charType)
-					case java.lang.Long.TYPE => bc
+					case Utils.longType => bc
 							.addLconst(exp.getData.asInstanceOf[java.lang.Long])
-						Some(CtClass.longType)
-					case java.lang.Double.TYPE => bc
+					case Utils.doubleType => bc
 							.addDconst(exp.getData.asInstanceOf[java.lang.Double])
-						Some(CtClass.doubleType)
-					case java.lang.Boolean.TYPE =>
+					case Utils.booleanType =>
 						val bool = exp.getData.asInstanceOf[java.lang.Boolean]
 						if (bool) {
 							bc.addIconst(1)
-							Some(CtClass.booleanType)
 						} else {
 							bc.addIconst(0)
-							Some(CtClass.booleanType)
 						}
 					case null => bc.add(Opcode.ACONST_NULL)
-						Some(null)
 					case _ => logger.error("What did you just give me")
-						None
 				}
-			case NodeType.name => getRef(
-				exp.getData.asInstanceOf[java.util.List[String]].asScala)
+			case NodeType.name => exp.setType(getRef(
+				exp.getData.asInstanceOf[java.util.List[String]].asScala).orNull)
 			case NodeType.infixop => Utils.assertNumChildren(exp, 2, logger)
-				val t1 = eval(exp.getChildren.get(0)).get
-				val t2 = eval(exp.getChildren.get(1)).get
-				val t = Utils.lct(t1, t2, logger)
+				val t = exp.getType
+				val lhs = exp.getChildren.get(0)
+				val rhs = exp.getChildren.get(1)
 
-				if (t != t1) {
-					logger.error("Oh god") // TODO: proper typing
+				eval(lhs)
+				if (lhs.getType != t) {
+					addCast(lhs.getType, t)
 				}
-				addCast(t2, t)
+
+				eval(rhs)
+				if (rhs.getType != t) {
+					addCast(rhs.getType, t)
+				}
+
 				addOp(exp.getData.asInstanceOf[Node], t)
-				Some(t)
 			case _ => logger.error(
 				"Expression of type " + exp.getNodeId + " either invalid or not implemented.")
 				None
@@ -299,7 +295,7 @@ class BytecodeGenerator(
 		if (ref.isEmpty) {
 			logger.error("Could not find reference: " + Utils.getStructure(rem))
 			System.exit(1)
-			(null, null)
+			(null, ref)
 		} else {
 			val clazz = cp.getOrNull(Utils.getStructure(ref))
 			if (clazz == null) {
