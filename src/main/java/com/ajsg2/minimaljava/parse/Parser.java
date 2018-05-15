@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Arrays;
 import java.util.Collections;
+import javassist.CtClass;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -483,7 +484,7 @@ class CUP$Parser$actions {
           case 1: // numtype ::= INT 
             {
               Node RESULT =null;
-		 RESULT = new Node(NodeType.type, Integer.TYPE, null, null); 
+		 RESULT = new Node(NodeType.type, CtClass.intType, null, null); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("numtype",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -492,7 +493,7 @@ class CUP$Parser$actions {
           case 2: // numtype ::= CHAR 
             {
               Node RESULT =null;
-		 RESULT = new Node(NodeType.type, Character.TYPE, null, null); 
+		 RESULT = new Node(NodeType.type, CtClass.charType, null, null); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("numtype",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -501,7 +502,7 @@ class CUP$Parser$actions {
           case 3: // numtype ::= LONG 
             {
               Node RESULT =null;
-		 RESULT = new Node(NodeType.type, Long.TYPE, null, null); 
+		 RESULT = new Node(NodeType.type, CtClass.longType, null, null); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("numtype",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -510,7 +511,7 @@ class CUP$Parser$actions {
           case 4: // numtype ::= DOUBLE 
             {
               Node RESULT =null;
-		 RESULT = new Node(NodeType.type, Double.TYPE, null, null); 
+		 RESULT = new Node(NodeType.type, CtClass.doubleType, null, null); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("numtype",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -531,7 +532,7 @@ class CUP$Parser$actions {
           case 6: // primtype ::= BOOL 
             {
               Node RESULT =null;
-		 RESULT = new Node(NodeType.type, Boolean.TYPE, null, null); 
+		 RESULT = new Node(NodeType.type, CtClass.booleanType, null, null); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("primtype",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -567,7 +568,7 @@ class CUP$Parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		int l = (int)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 RESULT = new Node(NodeType.lit, Integer.TYPE, l, null); 
+		 RESULT = new Node(NodeType.lit, CtClass.intType, l, null); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("lit",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -579,7 +580,7 @@ class CUP$Parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		char l = (char)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 RESULT = new Node(NodeType.lit, Character.TYPE, l, null); 
+		 RESULT = new Node(NodeType.lit, CtClass.charType, l, null); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("lit",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -591,7 +592,7 @@ class CUP$Parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		long l = (long)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 RESULT = new Node(NodeType.lit, Long.TYPE, l, null); 
+		 RESULT = new Node(NodeType.lit, CtClass.longType, l, null); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("lit",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -603,7 +604,7 @@ class CUP$Parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		double l = (double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 RESULT = new Node(NodeType.lit, Double.TYPE, l, null); 
+		 RESULT = new Node(NodeType.lit, CtClass.doubleType, l, null); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("lit",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -615,7 +616,7 @@ class CUP$Parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		boolean l = (boolean)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 RESULT = new Node(NodeType.lit, Boolean.TYPE, l, null); 
+		 RESULT = new Node(NodeType.lit, CtClass.booleanType, l, null); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("lit",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

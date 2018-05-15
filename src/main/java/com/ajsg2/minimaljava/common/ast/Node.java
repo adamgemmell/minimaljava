@@ -1,19 +1,19 @@
 package com.ajsg2.minimaljava.common.ast;
 
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import javassist.CtClass;
 
 public class Node {
 
 	private final NodeType nodeId;
-	private Type type;
+	private CtClass type;
 	private Object auxData;
 	private List<Node> children;
 	private StringBuilder sb = new StringBuilder();
 
-	public Node(NodeType nodeId, Type type, Object auxData, List<Node> children) {
+	public Node(NodeType nodeId, CtClass type, Object auxData, List<Node> children) {
 		this.nodeId = nodeId;
 		this.type = type;
 		this.auxData = auxData;
@@ -84,13 +84,13 @@ public class Node {
 		return nodeId;
 	}
 
-	public Type getType() {
+	public CtClass getType() {
 		return type;
 	}
 
 	// Empty the stringbuilder if we change this node
-	public void setType(Type type) {
-		if (!this.type.equals(type)) {
+	public void setType(CtClass type) {
+		if (this.type == null || !this.type.equals(type)) {
 			sb.setLength(0);
 			this.type = type;
 		}
