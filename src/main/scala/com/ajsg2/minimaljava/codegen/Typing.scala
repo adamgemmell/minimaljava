@@ -4,23 +4,27 @@ import com.ajsg2.minimaljava.codegen.Utils.{charType, doubleType, intType, longT
 import com.ajsg2.minimaljava.common.ast.{Node, NodeType}
 import com.typesafe.scalalogging.Logger
 import javassist.CtClass
-import scala.collection.mutable.{LinkedHashMap, Map}
+import scala.collection.mutable.Map
 
 object Typing {
 
 	val logger = Logger(this.getClass.getName)
 
-	def typeOf(node: Node): Unit = {
+	def typeOf(node: Node, varMap : Map[String, (Int, CtClass)]): Unit = {
 		node.getNodeId match {
 			case NodeType.lit => // Type is already set
 			case NodeType.infixop =>
 				Utils.assertNumChildren(node, 2, logger)
 				val l = node.getChildren.get(0)
 				val r = node.getChildren.get(1)
-				typeOf(l)
-				typeOf(r)
+				typeOf(l, varMap)
+				typeOf(r, varMap)
 				node.setType(lct(l.getType, r.getType))
-			case NodeType.name => // Handled later
+			case NodeType.name =>
+				val name = Utils.getName(node, logger)
+				val typeXD: Option[CtClass] = varMap.get(name).map(_._2)
+				node.setType(typeXD.orNull)
+
 			case _ => logger
 					.error("Expression " + node.getNodeId + " is either invalid or not implemented")
 		}

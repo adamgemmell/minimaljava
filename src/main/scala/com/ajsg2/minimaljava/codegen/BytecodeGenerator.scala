@@ -114,7 +114,7 @@ class BytecodeGenerator(
 		}
 
 		Utils.assertNumChildren(node, 1, logger)
-		Typing.typeOf(node.getChildren.get(0))
+		Typing.typeOf(node.getChildren.get(0), varMap)
 		node.prettyPrint()
 		eval(node.getChildren.get(0))
 	}

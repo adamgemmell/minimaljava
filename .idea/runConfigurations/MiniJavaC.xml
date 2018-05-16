@@ -2,7 +2,7 @@
   <configuration default="false" name="MiniJavaC" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.ajsg2.minimaljava.MiniJavaC" />
     <module name="minimaljava" />
-    <option name="PROGRAM_PARAMETERS" value="-wow testfiles/helloworld.mj" />
+    <option name="PROGRAM_PARAMETERS" value="testfiles/helloworld.mj" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <extension name="coverage">
       <pattern>
