@@ -44,5 +44,6 @@
     <orderEntry type="library" name="sbt: com.typesafe.scala-logging:scala-logging_2.12:3.7.2:jar" level="project" />
     <orderEntry type="library" name="sbt: com.github.vbmacher:java-cup-runtime:11b:jar" level="project" />
     <orderEntry type="library" name="sbt: ch.qos.logback:logback-core:1.2.3:jar" level="project" />
+    <orderEntry type="library" name="scala-sdk-2.12.4" level="project" />
   </component>
 </module>

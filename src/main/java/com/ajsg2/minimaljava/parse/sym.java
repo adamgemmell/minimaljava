@@ -94,50 +94,5 @@ public class sym {
   "LITDOUBLE",
   "LITBOOL"
   };
-
-  /* non terminals */
-  static final int program = 10;
-  static final int lit = 0;
-  static final int qualifiedname = 9;
-  static final int varassignment = 31;
-  static final int param = 19;
-  static final int classbodydecl = 13;
-  static final int opexpression = 28;
-  static final int classdef = 11;
-  static final int classbody = 14;
-  static final int constructordef = 15;
-  static final int block = 6;
-  static final int paramlist = 39;
-  static final int fielddef = 20;
-  static final int fieldaccess = 33;
-  static final int methodheader = 25;
-  static final int name = 7;
-  static final int castexpression = 29;
-  static final int methodsig = 42;
-  static final int arglist = 41;
-  static final int constructorbody = 17;
-  static final int methoddef = 23;
-  static final int primtype = 2;
-  static final int primary = 32;
-  static final int promexpression = 27;
-  static final int expression = 26;
-  static final int statement = 18;
-  static final int classdeflist = 36;
-  static final int unaryexpression = 30;
-  static final int classbodydecls = 37;
-  static final int ifelse = 22;
-  static final int classdecl = 12;
-  static final int methodinv = 34;
-  static final int classtype = 4;
-  static final int paramlistcomma = 40;
-  static final int objcreat = 35;
-  static final int constructordecl = 16;
-  static final int localvardef = 21;
-  static final int simplename = 8;
-  static final int statementlist = 38;
-  static final int methoddecl = 24;
-  static final int numtype = 1;
-  static final int infixop = 5;
-  static final int type = 3;
 }
 

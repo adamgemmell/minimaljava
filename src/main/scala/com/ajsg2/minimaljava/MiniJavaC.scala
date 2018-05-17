@@ -49,9 +49,9 @@ object MiniJavaC {
 
 		//Debug test
 		val p = new Parser(new Lexer(reader))
-		val ast: Seq[Node] = p.debug_parse.value.asInstanceOf[java.util.List[Node]].asScala
+		val ast: Seq[Node] = p.parse.value.asInstanceOf[java.util.List[Node]].asScala
 
-		ast.foreach(x => println(x.prettyPrint))
+		//ast.foreach(x => println(x.prettyPrint))
 
 		ast.foreach(x => generate(x))
 	}
